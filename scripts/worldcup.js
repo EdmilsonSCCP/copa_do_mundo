@@ -386,39 +386,138 @@
   }
 
   function renderKnockout() {
+    const bracket = buildKnockoutBracket();
+    const rounds = [
+      ['16 avos', 0, 16],
+      ['Oitavas', 16, 24],
+      ['Quartas', 24, 28],
+      ['Semifinais', 28, 30],
+      ['Decisão', 30, 32]
+    ];
+
+    $('#wcKnockout').innerHTML = rounds.map(([title, start, end]) => `
+      <section class="ko-round">
+        <h3>${title}</h3>
+        <div class="knockout-grid">
+          ${bracket.slice(start, end).map((match) => knockoutCard(match)).join('')}
+        </div>
+      </section>
+    `).join('');
+  }
+
+  function cleanSlot(slot) {
+    return String(slot)
+      .replaceAll('\u00c3\u201a\u00c2\u00ba', '\u00ba')
+      .replaceAll('\u00c2\u00ba', '\u00ba');
+  }
+
+  function buildKnockoutBracket() {
     const current = standings();
     const thirds = Object.values(current)
       .map((rows) => rows[2])
       .sort((a, b) => b.Pts - a.Pts || b.SG - a.SG || b.GP - a.GP || rating(b.team) - rating(a.team));
     let usedThird = 0;
+    const bracket = DATA.knockouts.map((match, index) => ({ ...match, index, teamA: null, teamB: null }));
 
-    function resolveSlot(slot) {
-      const first = slot.match(/^1º Grupo ([A-L])$/);
+    function resolveGroupSlot(slot) {
+      const normalized = cleanSlot(slot);
+      const first = normalized.match(/^1\u00ba Grupo ([A-L])$/);
       if (first) return current[first[1]][0].team;
 
-      const second = slot.match(/^2º Grupo ([A-L])$/);
+      const second = normalized.match(/^2\u00ba Grupo ([A-L])$/);
       if (second) return current[second[1]][1].team;
 
-      if (slot === 'Melhor 3º') {
-        const team = thirds[usedThird % thirds.length]?.team || slot;
+      if (normalized === 'Melhor 3\u00ba') {
+        const team = thirds[usedThird % thirds.length]?.team || 'A definir';
         usedThird += 1;
         return team;
       }
 
-      return slot;
+      return normalized;
     }
 
-    $('#wcKnockout').innerHTML = DATA.knockouts.map((match) => {
-      const teamA = resolveSlot(match.team1);
-      const teamB = resolveSlot(match.team2);
-      return `<article class="ko-card">
-        <strong>${escapeHTML(match.fase)}</strong>
-        <div class="small">${match.date} - ${match.time}</div>
-        <div class="versus-line">${teamHTML(teamA)}<span class="vs">x</span>${teamHTML(teamB, 'away')}</div>
-      </article>`;
-    }).join('');
+    for (let index = 0; index < 16; index += 1) {
+      bracket[index].teamA = resolveGroupSlot(bracket[index].team1);
+      bracket[index].teamB = resolveGroupSlot(bracket[index].team2);
+    }
+
+    for (let index = 16; index < 24; index += 1) {
+      const source = (index - 16) * 2;
+      bracket[index].teamA = knockoutResult(bracket[source]).winner || `Vencedor jogo ${source + 1}`;
+      bracket[index].teamB = knockoutResult(bracket[source + 1]).winner || `Vencedor jogo ${source + 2}`;
+    }
+
+    for (let index = 24; index < 28; index += 1) {
+      const source = 16 + (index - 24) * 2;
+      bracket[index].teamA = knockoutResult(bracket[source]).winner || `Vencedor jogo ${source + 1}`;
+      bracket[index].teamB = knockoutResult(bracket[source + 1]).winner || `Vencedor jogo ${source + 2}`;
+    }
+
+    for (let index = 28; index < 30; index += 1) {
+      const source = 24 + (index - 28) * 2;
+      bracket[index].teamA = knockoutResult(bracket[source]).winner || `Vencedor jogo ${source + 1}`;
+      bracket[index].teamB = knockoutResult(bracket[source + 1]).winner || `Vencedor jogo ${source + 2}`;
+    }
+
+    bracket[30].teamA = knockoutResult(bracket[28]).loser || 'Perdedor semifinal 1';
+    bracket[30].teamB = knockoutResult(bracket[29]).loser || 'Perdedor semifinal 2';
+    bracket[31].teamA = knockoutResult(bracket[28]).winner || 'Vencedor semifinal 1';
+    bracket[31].teamB = knockoutResult(bracket[29]).winner || 'Vencedor semifinal 2';
+
+    return bracket;
   }
 
+  function scoreFor(match) {
+    return scores[`ko-${match.index}`] || { a: '', b: '' };
+  }
+
+  function isPlaceholder(team) {
+    return /^(A definir|Vencedor|Perdedor)/.test(team || '');
+  }
+
+  function knockoutResult(match) {
+    if (!match?.teamA || !match?.teamB || isPlaceholder(match.teamA) || isPlaceholder(match.teamB)) {
+      return { winner: null, loser: null, status: 'Aguardando classificados' };
+    }
+
+    const score = scoreFor(match);
+    if (score.a === '' || score.b === '') {
+      return { winner: null, loser: null, status: 'Preencha o placar' };
+    }
+
+    const a = Number(score.a);
+    const b = Number(score.b);
+    if (!Number.isFinite(a) || !Number.isFinite(b)) {
+      return { winner: null, loser: null, status: 'Placar inválido' };
+    }
+
+    if (a === b) {
+      return { winner: null, loser: null, status: 'Defina desempate' };
+    }
+
+    const winner = a > b ? match.teamA : match.teamB;
+    const loser = a > b ? match.teamB : match.teamA;
+    return { winner, loser, status: `Avança: ${winner}` };
+  }
+
+  function knockoutCard(match) {
+    const score = scoreFor(match);
+    const result = knockoutResult(match);
+    const disabled = isPlaceholder(match.teamA) || isPlaceholder(match.teamB) ? 'disabled' : '';
+
+    return `<article class="ko-card ${result.winner ? 'decided' : ''}">
+      <div class="card-meta"><span>${escapeHTML(cleanSlot(match.fase))}</span><span>Jogo ${match.index + 1}</span></div>
+      <div class="small">${match.date} - ${match.time}</div>
+      <div class="ko-score">
+        ${teamHTML(match.teamA || 'A definir')}
+        <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(score.a)}" data-score-id="ko-${match.index}" data-score-side="a" aria-label="Gols ${escapeHTML(match.teamA || 'time 1')}" ${disabled}>
+        <span class="vs">x</span>
+        <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(score.b)}" data-score-id="ko-${match.index}" data-score-side="b" aria-label="Gols ${escapeHTML(match.teamB || 'time 2')}" ${disabled}>
+        ${teamHTML(match.teamB || 'A definir', 'away')}
+      </div>
+      <div class="ko-status">${escapeHTML(result.status)}</div>
+    </article>`;
+  }
   function phaseProjection(row) {
     const base = row.probClass;
     const strength = Math.max(0.05, Math.min(0.96, (rating(row.team) - 55) / 45));
