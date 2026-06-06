@@ -2,7 +2,7 @@
 declare(strict_types=1);
 require __DIR__ . '/../includes/auth_boot.php';
 
-// Se já estiver logado, manda para a home
+// Se jÃ¡ estiver logado, manda para a home
 if (current_user()) {
     header('Location: /index.php');
     exit;
@@ -18,11 +18,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token    = $_POST['csrf'] ?? '';
 
     if (!csrf_check($token)) {
-        $erro = 'Sessão expirada. Recarregue a página.';
+        $erro = 'SessÃ£o expirada. Recarregue a pÃ¡gina.';
     } elseif ($email === '' || $senha === '') {
         $erro = 'Informe e-mail e senha.';
     } else {
-        // Busca usuário
+        // Busca usuÃ¡rio
         $stmt = $db->prepare("SELECT * FROM usuarios WHERE email = :email LIMIT 1");
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch();
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $now = new DateTimeImmutable('now');
 
         if ($user) {
-            // bloqueio temporário
+            // bloqueio temporÃ¡rio
             if (!empty($user['locked_until']) && $now < new DateTimeImmutable($user['locked_until'])) {
                 $erro = 'Conta temporariamente bloqueada. Tente novamente em alguns minutos.';
             } elseif (!password_verify($senha, $user['senha'])) {
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                      WHERE id = :id");
                 $upd->execute([':f' => $fails, ':l' => $lockUntil, ':id' => $user['id']]);
 
-                $erro = 'E-mail ou senha inválidos.';
+                $erro = 'E-mail ou senha invÃ¡lidos.';
             } else {
                 // Senha OK
                 $upd = $db->prepare("UPDATE usuarios
@@ -80,7 +80,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     setcookie('remember', $rememberToken, [
                         'expires'  => time() + REMEMBER_LIFETIME,
                         'path'     => '/',
-                        'secure'   => true,   // requer HTTPS em produção
+                        'secure'   => $cookieSecure,
                         'httponly' => true,
                         'samesite' => 'Lax'
                     ]);
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
         } else {
-            $erro = 'E-mail ou senha inválidos.';
+            $erro = 'E-mail ou senha invÃ¡lidos.';
         }
     }
 }
@@ -109,8 +109,8 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
     :root{
         --bg:#000;          /* fundo tela */
         --card:#111;        /* caixa */
-        --text:#fff;        /* texto padrão */
-        --muted:#aaa;       /* texto secundário */
+        --text:#fff;        /* texto padrÃ£o */
+        --muted:#aaa;       /* texto secundÃ¡rio */
         --input-bg:#000;    /* fundo input */
         --input-bd:#333;    /* borda input */
         --ring:rgba(255,255,255,.08);
@@ -229,7 +229,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
         <input type="hidden" name="csrf" value="<?= $csrf ?>">
 
         <div class="field">
-            <input class="input" type="email" name="email" placeholder="Usuário (e-mail)" autocomplete="username" required autofocus>
+            <input class="input" type="email" name="email" placeholder="UsuÃ¡rio (e-mail)" autocomplete="username" required autofocus>
         </div>
 
         <div class="field">
@@ -247,7 +247,9 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
         <button class="btn" type="submit">Entrar</button>
     </form>
 
-    <p class="muted">Ainda não tem conta? <a href="/auth/register.php">Criar conta</a></p>
+    <p class="muted">Ainda nÃ£o tem conta? <a href="/auth/register.php">Criar conta</a></p>
 </main>
 </body>
 </html>
+
+

@@ -2,7 +2,7 @@
 declare(strict_types=1);
 require __DIR__ . '/../includes/auth_boot.php';
 
-// Se houver cookie remember, zera no banco também
+// Se houver cookie remember, zera no banco tambÃ©m
 if (!empty($_COOKIE['remember'])) {
     try {
         $stmt = $db->prepare("UPDATE usuarios SET remember_token = NULL, remember_expires = NULL WHERE remember_token = :t");
@@ -13,13 +13,13 @@ if (!empty($_COOKIE['remember'])) {
     setcookie('remember', '', [
         'expires'  => time() - 3600,
         'path'     => '/',
-        'secure'   => COOKIE_SECURE,
+        'secure'   => $cookieSecure,
         'httponly' => COOKIE_HTTPONLY,
         'samesite' => COOKIE_SAMESITE,
     ]);
 }
 
-// Destroi a sessão
+// Destroi a sessÃ£o
 $_SESSION = [];
 if (session_status() === PHP_SESSION_ACTIVE) {
     session_destroy();
@@ -28,3 +28,5 @@ if (session_status() === PHP_SESSION_ACTIVE) {
 // Volta para login
 header('Location: /auth/login.php');
 exit;
+
+

@@ -2,10 +2,10 @@
 declare(strict_types=1);
 
 /**
- * Bootstrap de autenticação
- * - Sessão
- * - Conexão PDO
- * - Helpers (CSRF, usuário atual, lembrar-me)
+ * Bootstrap de autenticaÃ§Ã£o
+ * - SessÃ£o
+ * - ConexÃ£o PDO
+ * - Helpers (CSRF, usuÃ¡rio atual, lembrar-me)
  */
 
 //////////////////////////////
@@ -19,17 +19,24 @@ const DB_PASS = 'Grupo20@*';   // <- sua senha do MySQL
 // 12h em segundos
 const REMEMBER_LIFETIME = 12 * 60 * 60;
 
-// Segurança (ajuste o domínio se tiver subdomínios)
-const COOKIE_SECURE   = true;   // manter true (HTTPS)
+// SeguranÃ§a (ajuste o domÃ­nio se tiver subdomÃ­nios)
 const COOKIE_HTTPONLY = true;
-const COOKIE_SAMESITE = 'Lax';  // 'Lax' é suficiente aqui
+const COOKIE_SAMESITE = 'Lax';
+
+function is_https_request(): bool
+{
+    return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
+        || (($_SERVER['HTTP_X_FORWARDED_PROTO'] ?? '') === 'https');
+}
+
+$cookieSecure = is_https_request();
 
 //////////////////////////////
-// Sessão (segura)
+// SessÃ£o (segura)
 //////////////////////////////
 ini_set('session.use_strict_mode', '1');
 ini_set('session.cookie_httponly', COOKIE_HTTPONLY ? '1' : '0');
-ini_set('session.cookie_secure',   COOKIE_SECURE   ? '1' : '0');
+ini_set('session.cookie_secure',   $cookieSecure ? '1' : '0');
 ini_set('session.cookie_samesite', COOKIE_SAMESITE);
 
 if (session_status() !== PHP_SESSION_ACTIVE) {
@@ -37,7 +44,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 }
 
 //////////////////////////////
-// Conexão PDO
+// ConexÃ£o PDO
 //////////////////////////////
 try {
     $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
@@ -48,7 +55,7 @@ try {
     ]);
 } catch (Throwable $e) {
     http_response_code(500);
-    exit('Erro de conexão com o banco.');
+    exit('Erro de conexÃ£o com o banco.');
 }
 
 //////////////////////////////
@@ -70,7 +77,7 @@ function csrf_check(?string $token): bool
 }
 
 //////////////////////////////
-// Usuário atual
+// UsuÃ¡rio atual
 //////////////////////////////
 function current_user(): ?array
 {
@@ -120,7 +127,7 @@ if (!current_user() && !empty($_COOKIE['remember'])) {
             setcookie('remember', $newToken, [
                 'expires'  => time() + REMEMBER_LIFETIME,
                 'path'     => '/',
-                'secure'   => COOKIE_SECURE,
+                'secure'   => $cookieSecure,
                 'httponly' => COOKIE_HTTPONLY,
                 'samesite' => COOKIE_SAMESITE,
             ]);
@@ -132,16 +139,17 @@ if (!current_user() && !empty($_COOKIE['remember'])) {
                 'role'  => $u['role'],
             ];
         } else {
-            // inválido/expirado -> limpa
+            // invÃ¡lido/expirado -> limpa
             setcookie('remember', '', [
                 'expires'  => time() - 3600,
                 'path'     => '/',
-                'secure'   => COOKIE_SECURE,
+                'secure'   => $cookieSecure,
                 'httponly' => COOKIE_HTTPONLY,
                 'samesite' => COOKIE_SAMESITE,
             ]);
         }
     } catch (Throwable $e) {
-        // Silencioso para não quebrar a navegação
+        // Silencioso para nÃ£o quebrar a navegaÃ§Ã£o
     }
 }
+
