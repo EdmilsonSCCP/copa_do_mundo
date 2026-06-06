@@ -1,0 +1,929 @@
+{
+  "groups": {
+    "A": [
+      "México",
+      "África do Sul",
+      "Coreia do Sul",
+      "República Tcheca"
+    ],
+    "B": [
+      "Canadá",
+      "Bósnia e Herzegovina",
+      "Qatar",
+      "Suíça"
+    ],
+    "C": [
+      "Brasil",
+      "Marrocos",
+      "Haiti",
+      "Escócia"
+    ],
+    "D": [
+      "Estados Unidos",
+      "Paraguai",
+      "Austrália",
+      "Turquia"
+    ],
+    "E": [
+      "Alemanha",
+      "Curaçao",
+      "Costa do Marfim",
+      "Equador"
+    ],
+    "F": [
+      "Holanda",
+      "Japão",
+      "Suécia",
+      "Tunísia"
+    ],
+    "G": [
+      "Bélgica",
+      "Egito",
+      "Irã",
+      "Nova Zelândia"
+    ],
+    "H": [
+      "Espanha",
+      "Cabo Verde",
+      "Arábia Saudita",
+      "Uruguai"
+    ],
+    "I": [
+      "França",
+      "Senegal",
+      "Iraque",
+      "Noruega"
+    ],
+    "J": [
+      "Argentina",
+      "Argélia",
+      "Áustria",
+      "Jordânia"
+    ],
+    "K": [
+      "Portugal",
+      "República Democrática do Congo",
+      "Uzbequistão",
+      "Colômbia"
+    ],
+    "L": [
+      "Inglaterra",
+      "Croácia",
+      "Gana",
+      "Panamá"
+    ]
+  },
+  "ratings": {
+    "França": 96,
+    "Espanha": 95,
+    "Argentina": 94,
+    "Brasil": 93,
+    "Inglaterra": 92,
+    "Portugal": 91,
+    "Holanda": 88,
+    "Bélgica": 87,
+    "Alemanha": 87,
+    "Uruguai": 86,
+    "Croácia": 85,
+    "Colômbia": 84,
+    "Marrocos": 83,
+    "Japão": 81,
+    "Estados Unidos": 80,
+    "Suíça": 80,
+    "Senegal": 79,
+    "Equador": 78,
+    "Noruega": 78,
+    "Áustria": 77,
+    "México": 77,
+    "Turquia": 76,
+    "Paraguai": 75,
+    "Escócia": 74,
+    "Austrália": 74,
+    "Coreia do Sul": 74,
+    "Suécia": 73,
+    "Costa do Marfim": 73,
+    "Egito": 72,
+    "Irã": 72,
+    "Gana": 71,
+    "Argélia": 71,
+    "Tunísia": 70,
+    "Arábia Saudita": 68,
+    "África do Sul": 67,
+    "Panamá": 66,
+    "Qatar": 66,
+    "República Tcheca": 75,
+    "Bósnia e Herzegovina": 69,
+    "Iraque": 65,
+    "Uzbequistão": 64,
+    "Cabo Verde": 63,
+    "Jordânia": 62,
+    "Haiti": 60,
+    "Nova Zelândia": 60,
+    "Curaçao": 59,
+    "República Democrática do Congo": 68
+  },
+  "matches": [
+    {
+      "id": 1,
+      "group": "A",
+      "date": "11/06/2026",
+      "time": "16:00",
+      "team1": "México",
+      "team2": "África do Sul"
+    },
+    {
+      "id": 2,
+      "group": "A",
+      "date": "11/06/2026",
+      "time": "23:00",
+      "team1": "Coreia do Sul",
+      "team2": "República Tcheca"
+    },
+    {
+      "id": 3,
+      "group": "B",
+      "date": "12/06/2026",
+      "time": "16:00",
+      "team1": "Canadá",
+      "team2": "Bósnia e Herzegovina"
+    },
+    {
+      "id": 4,
+      "group": "D",
+      "date": "12/06/2026",
+      "time": "22:00",
+      "team1": "Estados Unidos",
+      "team2": "Paraguai"
+    },
+    {
+      "id": 5,
+      "group": "B",
+      "date": "13/06/2026",
+      "time": "16:00",
+      "team1": "Qatar",
+      "team2": "Suíça"
+    },
+    {
+      "id": 6,
+      "group": "C",
+      "date": "13/06/2026",
+      "time": "19:00",
+      "team1": "Brasil",
+      "team2": "Marrocos"
+    },
+    {
+      "id": 7,
+      "group": "C",
+      "date": "13/06/2026",
+      "time": "22:00",
+      "team1": "Haiti",
+      "team2": "Escócia"
+    },
+    {
+      "id": 8,
+      "group": "D",
+      "date": "13/06/2026",
+      "time": "01:00",
+      "team1": "Austrália",
+      "team2": "Turquia"
+    },
+    {
+      "id": 9,
+      "group": "E",
+      "date": "14/06/2026",
+      "time": "14:00",
+      "team1": "Alemanha",
+      "team2": "Curaçao"
+    },
+    {
+      "id": 10,
+      "group": "F",
+      "date": "14/06/2026",
+      "time": "17:00",
+      "team1": "Holanda",
+      "team2": "Japão"
+    },
+    {
+      "id": 11,
+      "group": "E",
+      "date": "14/06/2026",
+      "time": "20:00",
+      "team1": "Costa do Marfim",
+      "team2": "Equador"
+    },
+    {
+      "id": 12,
+      "group": "F",
+      "date": "14/06/2026",
+      "time": "23:00",
+      "team1": "Suécia",
+      "team2": "Tunísia"
+    },
+    {
+      "id": 13,
+      "group": "H",
+      "date": "15/06/2026",
+      "time": "13:00",
+      "team1": "Espanha",
+      "team2": "Cabo Verde"
+    },
+    {
+      "id": 14,
+      "group": "G",
+      "date": "15/06/2026",
+      "time": "16:00",
+      "team1": "Bélgica",
+      "team2": "Egito"
+    },
+    {
+      "id": 15,
+      "group": "H",
+      "date": "15/06/2026",
+      "time": "19:00",
+      "team1": "Arábia Saudita",
+      "team2": "Uruguai"
+    },
+    {
+      "id": 16,
+      "group": "G",
+      "date": "15/06/2026",
+      "time": "22:00",
+      "team1": "Irã",
+      "team2": "Nova Zelândia"
+    },
+    {
+      "id": 17,
+      "group": "I",
+      "date": "16/06/2026",
+      "time": "16:00",
+      "team1": "França",
+      "team2": "Senegal"
+    },
+    {
+      "id": 18,
+      "group": "I",
+      "date": "16/06/2026",
+      "time": "19:00",
+      "team1": "Iraque",
+      "team2": "Noruega"
+    },
+    {
+      "id": 19,
+      "group": "J",
+      "date": "16/06/2026",
+      "time": "22:00",
+      "team1": "Argentina",
+      "team2": "Argélia"
+    },
+    {
+      "id": 20,
+      "group": "J",
+      "date": "16/06/2026",
+      "time": "01:00",
+      "team1": "Áustria",
+      "team2": "Jordânia"
+    },
+    {
+      "id": 21,
+      "group": "K",
+      "date": "17/06/2026",
+      "time": "14:00",
+      "team1": "Portugal",
+      "team2": "República Democrática do Congo"
+    },
+    {
+      "id": 22,
+      "group": "L",
+      "date": "17/06/2026",
+      "time": "17:00",
+      "team1": "Inglaterra",
+      "team2": "Croácia"
+    },
+    {
+      "id": 23,
+      "group": "L",
+      "date": "17/06/2026",
+      "time": "20:00",
+      "team1": "Gana",
+      "team2": "Panamá"
+    },
+    {
+      "id": 24,
+      "group": "K",
+      "date": "17/06/2026",
+      "time": "23:00",
+      "team1": "Uzbequistão",
+      "team2": "Colômbia"
+    },
+    {
+      "id": 25,
+      "group": "A",
+      "date": "18/06/2026",
+      "time": "13:00",
+      "team1": "República Tcheca",
+      "team2": "África do Sul"
+    },
+    {
+      "id": 26,
+      "group": "B",
+      "date": "18/06/2026",
+      "time": "16:00",
+      "team1": "Suíça",
+      "team2": "Bósnia e Herzegovina"
+    },
+    {
+      "id": 27,
+      "group": "B",
+      "date": "18/06/2026",
+      "time": "19:00",
+      "team1": "Canadá",
+      "team2": "Qatar"
+    },
+    {
+      "id": 28,
+      "group": "A",
+      "date": "18/06/2026",
+      "time": "22:00",
+      "team1": "México",
+      "team2": "Coreia do Sul"
+    },
+    {
+      "id": 29,
+      "group": "C",
+      "date": "19/06/2026",
+      "time": "19:00",
+      "team1": "Escócia",
+      "team2": "Marrocos"
+    },
+    {
+      "id": 30,
+      "group": "D",
+      "date": "19/06/2026",
+      "time": "16:00",
+      "team1": "Estados Unidos",
+      "team2": "Austrália"
+    },
+    {
+      "id": 31,
+      "group": "C",
+      "date": "19/06/2026",
+      "time": "22:00",
+      "team1": "Brasil",
+      "team2": "Haiti"
+    },
+    {
+      "id": 32,
+      "group": "D",
+      "date": "19/06/2026",
+      "time": "01:00",
+      "team1": "Turquia",
+      "team2": "Paraguai"
+    },
+    {
+      "id": 33,
+      "group": "F",
+      "date": "20/06/2026",
+      "time": "14:00",
+      "team1": "Holanda",
+      "team2": "Suécia"
+    },
+    {
+      "id": 34,
+      "group": "E",
+      "date": "20/06/2026",
+      "time": "17:00",
+      "team1": "Alemanha",
+      "team2": "Costa do Marfim"
+    },
+    {
+      "id": 35,
+      "group": "E",
+      "date": "20/06/2026",
+      "time": "21:00",
+      "team1": "Equador",
+      "team2": "Curaçao"
+    },
+    {
+      "id": 36,
+      "group": "F",
+      "date": "20/06/2026",
+      "time": "01:00",
+      "team1": "Tunísia",
+      "team2": "Japão"
+    },
+    {
+      "id": 37,
+      "group": "H",
+      "date": "21/06/2026",
+      "time": "13:00",
+      "team1": "Espanha",
+      "team2": "Arábia Saudita"
+    },
+    {
+      "id": 38,
+      "group": "G",
+      "date": "21/06/2026",
+      "time": "16:00",
+      "team1": "Bélgica",
+      "team2": "Irã"
+    },
+    {
+      "id": 39,
+      "group": "H",
+      "date": "21/06/2026",
+      "time": "19:00",
+      "team1": "Uruguai",
+      "team2": "Cabo Verde"
+    },
+    {
+      "id": 40,
+      "group": "G",
+      "date": "21/06/2026",
+      "time": "22:00",
+      "team1": "Nova Zelândia",
+      "team2": "Egito"
+    },
+    {
+      "id": 41,
+      "group": "J",
+      "date": "22/06/2026",
+      "time": "14:00",
+      "team1": "Argentina",
+      "team2": "Áustria"
+    },
+    {
+      "id": 42,
+      "group": "I",
+      "date": "22/06/2026",
+      "time": "18:00",
+      "team1": "França",
+      "team2": "Iraque"
+    },
+    {
+      "id": 43,
+      "group": "I",
+      "date": "22/06/2026",
+      "time": "21:00",
+      "team1": "Noruega",
+      "team2": "Senegal"
+    },
+    {
+      "id": 44,
+      "group": "J",
+      "date": "23/06/2026",
+      "time": "00:00",
+      "team1": "Jordânia",
+      "team2": "Argélia"
+    },
+    {
+      "id": 45,
+      "group": "K",
+      "date": "23/06/2026",
+      "time": "14:00",
+      "team1": "Portugal",
+      "team2": "Uzbequistão"
+    },
+    {
+      "id": 46,
+      "group": "L",
+      "date": "23/06/2026",
+      "time": "17:00",
+      "team1": "Inglaterra",
+      "team2": "Gana"
+    },
+    {
+      "id": 47,
+      "group": "L",
+      "date": "23/06/2026",
+      "time": "20:00",
+      "team1": "Panamá",
+      "team2": "Croácia"
+    },
+    {
+      "id": 48,
+      "group": "K",
+      "date": "23/06/2026",
+      "time": "23:00",
+      "team1": "Colômbia",
+      "team2": "República Democrática do Congo"
+    },
+    {
+      "id": 49,
+      "group": "B",
+      "date": "24/06/2026",
+      "time": "16:00",
+      "team1": "Suíça",
+      "team2": "Canadá"
+    },
+    {
+      "id": 50,
+      "group": "B",
+      "date": "24/06/2026",
+      "time": "16:00",
+      "team1": "Bósnia e Herzegovina",
+      "team2": "Qatar"
+    },
+    {
+      "id": 51,
+      "group": "C",
+      "date": "24/06/2026",
+      "time": "19:00",
+      "team1": "Escócia",
+      "team2": "Brasil"
+    },
+    {
+      "id": 52,
+      "group": "C",
+      "date": "24/06/2026",
+      "time": "19:00",
+      "team1": "Marrocos",
+      "team2": "Haiti"
+    },
+    {
+      "id": 53,
+      "group": "A",
+      "date": "24/06/2026",
+      "time": "22:00",
+      "team1": "República Tcheca",
+      "team2": "México"
+    },
+    {
+      "id": 54,
+      "group": "A",
+      "date": "24/06/2026",
+      "time": "22:00",
+      "team1": "África do Sul",
+      "team2": "Coreia do Sul"
+    },
+    {
+      "id": 55,
+      "group": "E",
+      "date": "25/06/2026",
+      "time": "17:00",
+      "team1": "Equador",
+      "team2": "Alemanha"
+    },
+    {
+      "id": 56,
+      "group": "E",
+      "date": "25/06/2026",
+      "time": "17:00",
+      "team1": "Curaçao",
+      "team2": "Costa do Marfim"
+    },
+    {
+      "id": 57,
+      "group": "F",
+      "date": "25/06/2026",
+      "time": "20:00",
+      "team1": "Japão",
+      "team2": "Suécia"
+    },
+    {
+      "id": 58,
+      "group": "F",
+      "date": "25/06/2026",
+      "time": "20:00",
+      "team1": "Tunísia",
+      "team2": "Holanda"
+    },
+    {
+      "id": 59,
+      "group": "D",
+      "date": "25/06/2026",
+      "time": "23:00",
+      "team1": "Turquia",
+      "team2": "Estados Unidos"
+    },
+    {
+      "id": 60,
+      "group": "D",
+      "date": "25/06/2026",
+      "time": "23:00",
+      "team1": "Paraguai",
+      "team2": "Austrália"
+    },
+    {
+      "id": 61,
+      "group": "I",
+      "date": "26/06/2026",
+      "time": "16:00",
+      "team1": "Noruega",
+      "team2": "França"
+    },
+    {
+      "id": 62,
+      "group": "I",
+      "date": "26/06/2026",
+      "time": "16:00",
+      "team1": "Senegal",
+      "team2": "Iraque"
+    },
+    {
+      "id": 63,
+      "group": "H",
+      "date": "26/06/2026",
+      "time": "21:00",
+      "team1": "Cabo Verde",
+      "team2": "Arábia Saudita"
+    },
+    {
+      "id": 64,
+      "group": "H",
+      "date": "26/06/2026",
+      "time": "21:00",
+      "team1": "Uruguai",
+      "team2": "Espanha"
+    },
+    {
+      "id": 65,
+      "group": "G",
+      "date": "27/06/2026",
+      "time": "00:00",
+      "team1": "Egito",
+      "team2": "Irã"
+    },
+    {
+      "id": 66,
+      "group": "G",
+      "date": "27/06/2026",
+      "time": "00:00",
+      "team1": "Nova Zelândia",
+      "team2": "Bélgica"
+    },
+    {
+      "id": 67,
+      "group": "L",
+      "date": "27/06/2026",
+      "time": "18:00",
+      "team1": "Panamá",
+      "team2": "Inglaterra"
+    },
+    {
+      "id": 68,
+      "group": "L",
+      "date": "27/06/2026",
+      "time": "18:00",
+      "team1": "Croácia",
+      "team2": "Gana"
+    },
+    {
+      "id": 69,
+      "group": "K",
+      "date": "27/06/2026",
+      "time": "20:30",
+      "team1": "Colômbia",
+      "team2": "Portugal"
+    },
+    {
+      "id": 70,
+      "group": "K",
+      "date": "27/06/2026",
+      "time": "20:30",
+      "team1": "República Democrática do Congo",
+      "team2": "Uzbequistão"
+    },
+    {
+      "id": 71,
+      "group": "J",
+      "date": "27/06/2026",
+      "time": "23:00",
+      "team1": "Argélia",
+      "team2": "Áustria"
+    },
+    {
+      "id": 72,
+      "group": "J",
+      "date": "27/06/2026",
+      "time": "23:00",
+      "team1": "Jordânia",
+      "team2": "Argentina"
+    }
+  ],
+  "knockouts": [
+    {
+      "fase": "16 avos",
+      "date": "28/06/2026",
+      "time": "16:00",
+      "team1": "2º Grupo A",
+      "team2": "2º Grupo B"
+    },
+    {
+      "fase": "16 avos",
+      "date": "29/06/2026",
+      "time": "14:00",
+      "team1": "1º Grupo C",
+      "team2": "2º Grupo F"
+    },
+    {
+      "fase": "16 avos",
+      "date": "29/06/2026",
+      "time": "17:30",
+      "team1": "1º Grupo E",
+      "team2": "Melhor 3º"
+    },
+    {
+      "fase": "16 avos",
+      "date": "29/06/2026",
+      "time": "22:00",
+      "team1": "1º Grupo F",
+      "team2": "2º Grupo C"
+    },
+    {
+      "fase": "16 avos",
+      "date": "30/06/2026",
+      "time": "14:00",
+      "team1": "2º Grupo E",
+      "team2": "2º Grupo I"
+    },
+    {
+      "fase": "16 avos",
+      "date": "30/06/2026",
+      "time": "18:00",
+      "team1": "1º Grupo I",
+      "team2": "Melhor 3º"
+    },
+    {
+      "fase": "16 avos",
+      "date": "30/06/2026",
+      "time": "22:00",
+      "team1": "1º Grupo A",
+      "team2": "Melhor 3º"
+    },
+    {
+      "fase": "16 avos",
+      "date": "01/07/2026",
+      "time": "13:00",
+      "team1": "1º Grupo L",
+      "team2": "Melhor 3º"
+    },
+    {
+      "fase": "16 avos",
+      "date": "01/07/2026",
+      "time": "17:00",
+      "team1": "1º Grupo G",
+      "team2": "Melhor 3º"
+    },
+    {
+      "fase": "16 avos",
+      "date": "01/07/2026",
+      "time": "21:00",
+      "team1": "1º Grupo D",
+      "team2": "Melhor 3º"
+    },
+    {
+      "fase": "16 avos",
+      "date": "02/07/2026",
+      "time": "16:00",
+      "team1": "1º Grupo H",
+      "team2": "2º Grupo J"
+    },
+    {
+      "fase": "16 avos",
+      "date": "02/07/2026",
+      "time": "20:00",
+      "team1": "2º Grupo K",
+      "team2": "2º Grupo L"
+    },
+    {
+      "fase": "16 avos",
+      "date": "03/07/2026",
+      "time": "00:00",
+      "team1": "1º Grupo B",
+      "team2": "Melhor 3º"
+    },
+    {
+      "fase": "16 avos",
+      "date": "03/07/2026",
+      "time": "15:00",
+      "team1": "2º Grupo D",
+      "team2": "2º Grupo G"
+    },
+    {
+      "fase": "16 avos",
+      "date": "03/07/2026",
+      "time": "19:00",
+      "team1": "1º Grupo J",
+      "team2": "2º Grupo H"
+    },
+    {
+      "fase": "16 avos",
+      "date": "03/07/2026",
+      "time": "22:30",
+      "team1": "1º Grupo K",
+      "team2": "Melhor 3º"
+    },
+    {
+      "fase": "Oitavas",
+      "date": "04/07/2026",
+      "time": "14:00",
+      "team1": "Vencedor 16 avos",
+      "team2": "Vencedor 16 avos"
+    },
+    {
+      "fase": "Oitavas",
+      "date": "04/07/2026",
+      "time": "18:00",
+      "team1": "Vencedor 16 avos",
+      "team2": "Vencedor 16 avos"
+    },
+    {
+      "fase": "Oitavas",
+      "date": "05/07/2026",
+      "time": "17:00",
+      "team1": "Vencedor 16 avos",
+      "team2": "Vencedor 16 avos"
+    },
+    {
+      "fase": "Oitavas",
+      "date": "05/07/2026",
+      "time": "21:00",
+      "team1": "Vencedor 16 avos",
+      "team2": "Vencedor 16 avos"
+    },
+    {
+      "fase": "Oitavas",
+      "date": "06/07/2026",
+      "time": "16:00",
+      "team1": "Vencedor 16 avos",
+      "team2": "Vencedor 16 avos"
+    },
+    {
+      "fase": "Oitavas",
+      "date": "06/07/2026",
+      "time": "21:00",
+      "team1": "Vencedor 16 avos",
+      "team2": "Vencedor 16 avos"
+    },
+    {
+      "fase": "Oitavas",
+      "date": "07/07/2026",
+      "time": "13:00",
+      "team1": "Vencedor 16 avos",
+      "team2": "Vencedor 16 avos"
+    },
+    {
+      "fase": "Oitavas",
+      "date": "07/07/2026",
+      "time": "17:00",
+      "team1": "Vencedor 16 avos",
+      "team2": "Vencedor 16 avos"
+    },
+    {
+      "fase": "Quartas",
+      "date": "09/07/2026",
+      "time": "17:00",
+      "team1": "A definir",
+      "team2": "A definir"
+    },
+    {
+      "fase": "Quartas",
+      "date": "10/07/2026",
+      "time": "16:00",
+      "team1": "A definir",
+      "team2": "A definir"
+    },
+    {
+      "fase": "Quartas",
+      "date": "11/07/2026",
+      "time": "18:00",
+      "team1": "A definir",
+      "team2": "A definir"
+    },
+    {
+      "fase": "Quartas",
+      "date": "11/07/2026",
+      "time": "22:00",
+      "team1": "A definir",
+      "team2": "A definir"
+    },
+    {
+      "fase": "Semifinal",
+      "date": "14/07/2026",
+      "time": "16:00",
+      "team1": "A definir",
+      "team2": "A definir"
+    },
+    {
+      "fase": "Semifinal",
+      "date": "15/07/2026",
+      "time": "16:00",
+      "team1": "A definir",
+      "team2": "A definir"
+    },
+    {
+      "fase": "3º lugar",
+      "date": "18/07/2026",
+      "time": "18:00",
+      "team1": "A definir",
+      "team2": "A definir"
+    },
+    {
+      "fase": "Final",
+      "date": "19/07/2026",
+      "time": "16:00",
+      "team1": "A definir",
+      "team2": "A definir"
+    }
+  ]
+}

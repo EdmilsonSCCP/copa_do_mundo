@@ -1,0 +1,182 @@
+[
+    {
+        "posicao": "1",
+        "nome": "Bruno Mars",
+        "ouvintes": "137,784,158",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/90f0b5b11df4f87ee878f38569b5995b\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "2",
+        "nome": "Justin Bieber",
+        "ouvintes": "135,749,308",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/fe097f693cebf1f882e3da79e99e3bf9\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "3",
+        "nome": "The Weeknd",
+        "ouvintes": "114,514,621",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/581693b4724a7fcfa754455101e13a44\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "4",
+        "nome": "Michael Jackson",
+        "ouvintes": "112,608,326",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/97fae13b2b30e4aec2e8c9e0c7839d92\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "5",
+        "nome": "Rihanna",
+        "ouvintes": "111,154,462",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/b78cdc205fae2641b89208e78b30e1b3\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "6",
+        "nome": "Lady Gaga",
+        "ouvintes": "103,493,380",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/7565262f7661b0d762621a8d69ba6f49\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "7",
+        "nome": "Taylor Swift",
+        "ouvintes": "100,699,698",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/e528e270424103b527f8a27ac625563b\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "8",
+        "nome": "Bad Bunny",
+        "ouvintes": "100,389,460",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/044a3f315b041864887a8dd8709e6926\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "9",
+        "nome": "Drake",
+        "ouvintes": "99,357,192",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/eb0ed5b21d1ea5af021fc074ded0e91f\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "10",
+        "nome": "Coldplay",
+        "ouvintes": "92,932,665",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/3087954bca22f306324912e5ac8375c3\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "11",
+        "nome": "David Guetta",
+        "ouvintes": "89,238,293",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/2d527fa03e106ed82a28f161694278d3\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "12",
+        "nome": "Shakira",
+        "ouvintes": "88,758,106",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/69c569506a8ff6ab0edfecbd1adf94b0\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "13",
+        "nome": "Katy Perry",
+        "ouvintes": "87,376,385",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/9c144bd1ed91b2a59c826cf1d1cde633\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "14",
+        "nome": "Ed Sheeran",
+        "ouvintes": "86,956,079",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/d6bb84390641d8ae9118228d9544e53d\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "15",
+        "nome": "Ariana Grande",
+        "ouvintes": "86,398,115",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/3504ffe2519090026bc359b689d22e20\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "16",
+        "nome": "Pitbull",
+        "ouvintes": "83,254,152",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/f755bcad19948129e670598a52d3f874\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "17",
+        "nome": "Billie Eilish",
+        "ouvintes": "82,817,775",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/8eab1a9a644889aabaca1e193e05f984\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "18",
+        "nome": "Calvin Harris",
+        "ouvintes": "80,648,626",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/a53031d02dc2f8a8eb15d117c015d5eb\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "19",
+        "nome": "Maroon 5",
+        "ouvintes": "79,245,160",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/bbb526b9666c7e31dee295bcabbbdd8e\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "20",
+        "nome": "Eminem",
+        "ouvintes": "74,785,659",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/0f30bbd33a680030054af004d698d6ac\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "21",
+        "nome": "J Balvin",
+        "ouvintes": "72,795,746",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/325eaa46bc25052d0e3d549d60cc8225\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "22",
+        "nome": "Kanye West",
+        "ouvintes": "72,161,541",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/bb76c2ee3b068726ab4c37b0aabdb57a\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "23",
+        "nome": "Kendrick Lamar",
+        "ouvintes": "70,705,362",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/be0a7c550567f4af0ed202d7235b74d6\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "24",
+        "nome": "Sia",
+        "ouvintes": "69,541,586",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/f3d1301aeb356dc0f40440c3d4f39d0e\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "25",
+        "nome": "SZA",
+        "ouvintes": "68,728,367",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/8ced041da2bed70d5715f0860956169b\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "26",
+        "nome": "Zara Larsson",
+        "ouvintes": "68,494,685",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/26e260152661dea1897a6eea198f9981\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "27",
+        "nome": "Dua Lipa",
+        "ouvintes": "68,352,992",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/7375742a46dbebb6efc0ae362e18eb24\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "28",
+        "nome": "Harry Styles",
+        "ouvintes": "66,871,946",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/1151dba9b3edc0633adf35b64c21713f\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "29",
+        "nome": "Black Eyed Peas",
+        "ouvintes": "66,055,161",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/d6c2e791dfcddde652b388032e312f15\/1000x1000-000000-80-0-0.jpg"
+    },
+    {
+        "posicao": "30",
+        "nome": "Daddy Yankee",
+        "ouvintes": "65,084,218",
+        "imagem": "https:\/\/cdn-images.dzcdn.net\/images\/artist\/a4f77d40d68cf544e74883b2bd904fce\/1000x1000-000000-80-0-0.jpg"
+    }
+]

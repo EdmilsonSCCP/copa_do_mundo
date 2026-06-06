@@ -1,0 +1,152 @@
+[
+    {
+        "posicao": "1",
+        "nome": "Bruno Mars",
+        "ouvintes": "137,784,158"
+    },
+    {
+        "posicao": "2",
+        "nome": "Justin Bieber",
+        "ouvintes": "135,749,308"
+    },
+    {
+        "posicao": "3",
+        "nome": "The Weeknd",
+        "ouvintes": "114,514,621"
+    },
+    {
+        "posicao": "4",
+        "nome": "Michael Jackson",
+        "ouvintes": "112,608,326"
+    },
+    {
+        "posicao": "5",
+        "nome": "Rihanna",
+        "ouvintes": "111,154,462"
+    },
+    {
+        "posicao": "6",
+        "nome": "Lady Gaga",
+        "ouvintes": "103,493,380"
+    },
+    {
+        "posicao": "7",
+        "nome": "Taylor Swift",
+        "ouvintes": "100,699,698"
+    },
+    {
+        "posicao": "8",
+        "nome": "Bad Bunny",
+        "ouvintes": "100,389,460"
+    },
+    {
+        "posicao": "9",
+        "nome": "Drake",
+        "ouvintes": "99,357,192"
+    },
+    {
+        "posicao": "10",
+        "nome": "Coldplay",
+        "ouvintes": "92,932,665"
+    },
+    {
+        "posicao": "11",
+        "nome": "David Guetta",
+        "ouvintes": "89,238,293"
+    },
+    {
+        "posicao": "12",
+        "nome": "Shakira",
+        "ouvintes": "88,758,106"
+    },
+    {
+        "posicao": "13",
+        "nome": "Katy Perry",
+        "ouvintes": "87,376,385"
+    },
+    {
+        "posicao": "14",
+        "nome": "Ed Sheeran",
+        "ouvintes": "86,956,079"
+    },
+    {
+        "posicao": "15",
+        "nome": "Ariana Grande",
+        "ouvintes": "86,398,115"
+    },
+    {
+        "posicao": "16",
+        "nome": "Pitbull",
+        "ouvintes": "83,254,152"
+    },
+    {
+        "posicao": "17",
+        "nome": "Billie Eilish",
+        "ouvintes": "82,817,775"
+    },
+    {
+        "posicao": "18",
+        "nome": "Calvin Harris",
+        "ouvintes": "80,648,626"
+    },
+    {
+        "posicao": "19",
+        "nome": "Maroon 5",
+        "ouvintes": "79,245,160"
+    },
+    {
+        "posicao": "20",
+        "nome": "Eminem",
+        "ouvintes": "74,785,659"
+    },
+    {
+        "posicao": "21",
+        "nome": "J Balvin",
+        "ouvintes": "72,795,746"
+    },
+    {
+        "posicao": "22",
+        "nome": "Kanye West",
+        "ouvintes": "72,161,541"
+    },
+    {
+        "posicao": "23",
+        "nome": "Kendrick Lamar",
+        "ouvintes": "70,705,362"
+    },
+    {
+        "posicao": "24",
+        "nome": "Sia",
+        "ouvintes": "69,541,586"
+    },
+    {
+        "posicao": "25",
+        "nome": "SZA",
+        "ouvintes": "68,728,367"
+    },
+    {
+        "posicao": "26",
+        "nome": "Zara Larsson",
+        "ouvintes": "68,494,685"
+    },
+    {
+        "posicao": "27",
+        "nome": "Dua Lipa",
+        "ouvintes": "68,352,992"
+    },
+    {
+        "posicao": "28",
+        "nome": "Harry Styles",
+        "ouvintes": "66,871,946"
+    },
+    {
+        "posicao": "29",
+        "nome": "Black Eyed Peas",
+        "ouvintes": "66,055,161"
+    },
+    {
+        "posicao": "30",
+        "nome": "Daddy Yankee",
+        "ouvintes": "65,084,218"
+    }
+]

@@ -1,0 +1,310 @@
+body {
+  background:
+    radial-gradient(circle at top left, rgba(29, 185, 84, .2), transparent 28rem),
+    radial-gradient(circle at top right, rgba(255, 255, 255, .08), transparent 26rem),
+    #07110c;
+}
+
+.chart-shell {
+  width: min(1120px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 28px 0 44px;
+}
+
+.chart-hero {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: clamp(24px, 5vw, 46px);
+  background:
+    linear-gradient(135deg, rgba(29, 185, 84, .24), transparent 50%),
+    color-mix(in srgb, var(--panel) 90%, transparent);
+  box-shadow: var(--shadow);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 22px;
+  align-items: end;
+  margin-bottom: 18px;
+}
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: #1ed760;
+  text-transform: uppercase;
+  letter-spacing: .14em;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.chart-hero h1 {
+  margin: 0 0 10px;
+  font-size: clamp(36px, 6vw, 72px);
+  line-height: .96;
+}
+
+.chart-hero p {
+  margin: 0;
+  color: var(--muted);
+  max-width: 700px;
+  line-height: 1.55;
+}
+
+.week-card {
+  min-width: 230px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px;
+  background: rgba(0, 0, 0, .24);
+}
+
+.week-card span,
+.week-card small {
+  display: block;
+  color: var(--muted);
+}
+
+.week-card strong {
+  display: block;
+  margin: 7px 0;
+  font-size: 22px;
+}
+
+.chart-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.chart-toolbar p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.refresh-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 11px 16px;
+  text-decoration: none;
+  color: #07110c;
+  background: #1ed760;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.refresh-button:hover {
+  background: #54ee8a;
+}
+
+.chart-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 12px;
+}
+
+.chart-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 84px 86px minmax(0, 1fr) 260px;
+  gap: 18px;
+  align-items: center;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--panel) 90%, transparent);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, .18);
+}
+
+.chart-item.is-leader {
+  grid-template-columns: 110px 180px minmax(0, 1fr) 280px;
+  padding: 24px;
+  background:
+    linear-gradient(135deg, rgba(29, 185, 84, .22), transparent 42%),
+    color-mix(in srgb, var(--panel) 92%, black);
+}
+
+.rank-box {
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  border-radius: 8px;
+  color: var(--text);
+  background: rgba(255, 255, 255, .08);
+  font-weight: 1000;
+  font-size: 34px;
+}
+
+.is-leader .rank-box {
+  width: 92px;
+  height: 92px;
+  color: #07110c;
+  background: #1ed760;
+  font-size: 52px;
+}
+
+.artist-art {
+  width: 86px;
+  height: 86px;
+  border-radius: 8px;
+  object-fit: cover;
+  background: var(--panel-2);
+}
+
+.is-leader .artist-art {
+  width: 180px;
+  height: 180px;
+}
+
+.artist-name {
+  margin: 0 0 8px;
+  font-size: 23px;
+  line-height: 1.1;
+}
+
+.is-leader .artist-name {
+  font-size: clamp(30px, 4vw, 48px);
+}
+
+.listeners {
+  margin: 0;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.new-badge {
+  display: inline-flex;
+  margin-top: 10px;
+  border-radius: 999px;
+  padding: 5px 9px;
+  color: #07110c;
+  background: #1ed760;
+  font-weight: 900;
+  font-size: 12px;
+}
+
+.stats-block {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.stat {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 10px;
+  text-align: center;
+  background: rgba(0, 0, 0, .18);
+}
+
+.stat-label {
+  display: block;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.stat-value {
+  display: block;
+  margin-top: 4px;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.movement {
+  color: var(--muted);
+  font-weight: 800;
+  margin-top: 8px;
+}
+
+.notice {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  color: var(--muted);
+  background: var(--panel);
+  margin-bottom: 14px;
+}
+
+.notice-success {
+  border-color: rgba(30, 215, 96, .45);
+  color: #b9ffd1;
+  background: rgba(30, 215, 96, .12);
+}
+
+.notice-error {
+  border-color: rgba(238, 93, 93, .45);
+  color: #ffc4c4;
+  background: rgba(238, 93, 93, .12);
+}
+
+@media (max-width: 900px) {
+  .chart-hero,
+  .chart-toolbar {
+    grid-template-columns: 1fr;
+    align-items: start;
+  }
+
+  .chart-toolbar {
+    display: grid;
+  }
+
+  .chart-item,
+  .chart-item.is-leader {
+    grid-template-columns: 64px 76px minmax(0, 1fr);
+  }
+
+  .stats-block {
+    grid-column: 1 / -1;
+  }
+
+  .rank-box {
+    width: 56px;
+    height: 56px;
+    font-size: 26px;
+  }
+
+  .is-leader .rank-box {
+    width: 62px;
+    height: 62px;
+    font-size: 32px;
+  }
+
+  .artist-art,
+  .is-leader .artist-art {
+    width: 76px;
+    height: 76px;
+  }
+}
+
+@media (max-width: 560px) {
+  .chart-shell {
+    width: min(100% - 20px, 1120px);
+  }
+
+  .chart-item,
+  .chart-item.is-leader {
+    gap: 10px;
+    padding: 12px;
+  }
+
+  .artist-name,
+  .is-leader .artist-name {
+    font-size: 20px;
+  }
+
+  .stats-block {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .stat {
+    padding: 8px 6px;
+  }
+}
