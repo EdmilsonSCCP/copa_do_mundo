@@ -509,11 +509,15 @@
       <div class="card-meta"><span>${escapeHTML(cleanSlot(match.fase))}</span><span>Jogo ${match.index + 1}</span></div>
       <div class="small">${match.date} - ${match.time}</div>
       <div class="ko-score">
-        ${teamHTML(match.teamA || 'A definir')}
-        <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(score.a)}" data-score-id="ko-${match.index}" data-score-side="a" aria-label="Gols ${escapeHTML(match.teamA || 'time 1')}" ${disabled}>
-        <span class="vs">x</span>
-        <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(score.b)}" data-score-id="ko-${match.index}" data-score-side="b" aria-label="Gols ${escapeHTML(match.teamB || 'time 2')}" ${disabled}>
-        ${teamHTML(match.teamB || 'A definir', 'away')}
+        <div class="ko-team-line">
+          ${teamHTML(match.teamA || 'A definir')}
+          <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(score.a)}" data-score-id="ko-${match.index}" data-score-side="a" aria-label="Gols ${escapeHTML(match.teamA || 'time 1')}" ${disabled}>
+        </div>
+        <span class="ko-vs">x</span>
+        <div class="ko-team-line away">
+          <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(score.b)}" data-score-id="ko-${match.index}" data-score-side="b" aria-label="Gols ${escapeHTML(match.teamB || 'time 2')}" ${disabled}>
+          ${teamHTML(match.teamB || 'A definir', 'away')}
+        </div>
       </div>
       <div class="ko-status">${escapeHTML(result.status)}</div>
     </article>`;

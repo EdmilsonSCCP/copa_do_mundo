@@ -102,7 +102,7 @@ $pageScripts = ['/scripts/worldcup.js'];
       </div>
       <p>As vagas de grupo e melhores terceiros são preenchidas conforme a tabela atual.</p>
     </div>
-    <div id="wcKnockout" class="knockout-grid"></div>
+    <div id="wcKnockout" class="knockout-board"></div>
   </section>
 
   <section class="tab-panel hidden" id="stats" data-panel="stats">
