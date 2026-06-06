@@ -478,10 +478,15 @@ tr.third td:first-child { border-left: 4px solid var(--warn); }
 }
 
 .bar-fill {
+  display: block;
   height: 100%;
   border-radius: inherit;
   background: linear-gradient(90deg, var(--accent-2), var(--accent));
 }
+
+.bar-fill.win { background: var(--accent); }
+.bar-fill.draw { background: var(--warn); }
+.bar-fill.lose { background: var(--bad); }
 
 .subsection-title {
   margin: 28px 0 12px;

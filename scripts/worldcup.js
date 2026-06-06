@@ -343,9 +343,9 @@
                 <div class="versus-line">${teamHTML(match.team1)}<span class="vs">VS</span>${teamHTML(match.team2, 'away')}</div>
                 <p class="winner">Favorito estimado: <b>${escapeHTML(favorite)}</b></p>
                 <div class="prob-rows">
-                  ${probRow(match.team1, p1)}
-                  ${probRow('Empate', draw)}
-                  ${probRow(match.team2, p2)}
+                  ${probRow(match.team1, p1, 'win')}
+                  ${probRow('Empate', draw, 'draw')}
+                  ${probRow(match.team2, p2, 'lose')}
                 </div>
               </article>`;
             }).join('')}
@@ -356,8 +356,8 @@
     $('#wcSchedule').innerHTML = groups || '<div class="empty">Nenhum jogo encontrado.</div>';
   }
 
-  function probRow(label, value) {
-    return `<div class="prob-row"><span>${escapeHTML(label)}</span><span class="bar-track"><span class="bar-fill" style="width:${pct(value)}"></span></span><b>${pct(value)}</b></div>`;
+  function probRow(label, value, tone = '') {
+    return `<div class="prob-row"><span>${escapeHTML(label)}</span><span class="bar-track"><span class="bar-fill ${tone}" style="width:${pct(value)}"></span></span><b>${pct(value)}</b></div>`;
   }
 
   function renderMatches() {
