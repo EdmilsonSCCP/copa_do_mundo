@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token    = $_POST['csrf'] ?? '';
 
     if (!csrf_check($token)) {
-        $erro = 'SessÃ£o expirada. Recarregue a pÃ¡gina.';
+        $erro = 'Sessão expirada. Recarregue a página.';
     } elseif ($email === '' || $senha === '') {
         $erro = 'Informe e-mail e senha.';
     } else {
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
         } else {
-            $erro = 'E-mail ou senha invÃ¡lidos.';
+            $erro = 'E-mail ou senha inválidos.';
         }
     }
 }
@@ -229,7 +229,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
         <input type="hidden" name="csrf" value="<?= $csrf ?>">
 
         <div class="field">
-            <input class="input" type="email" name="email" placeholder="UsuÃ¡rio (e-mail)" autocomplete="username" required autofocus>
+            <input class="input" type="email" name="email" placeholder="Usuário (e-mail)" autocomplete="username" required autofocus>
         </div>
 
         <div class="field">
@@ -247,7 +247,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
         <button class="btn" type="submit">Entrar</button>
     </form>
 
-    <p class="muted">Ainda nÃ£o tem conta? <a href="/auth/register.php">Criar conta</a></p>
+    <p class="muted">Ainda não tem conta? <a href="/auth/register.php">Criar conta</a></p>
 </main>
 </body>
 </html>
