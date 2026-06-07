@@ -2,6 +2,7 @@
   const STORAGE_KEY = 'copa2026-scores-v3';
   const THEME_KEY = 'copa2026-theme';
   const DATA_URL = '/data/world-cup-2026.json';
+  const SCORES_API = '/api/simulator.php';
 
   const TEAM_META = {
     franca: ['FR', 'Europa', 1],
@@ -66,6 +67,8 @@
 
   let DATA = null;
   let scores = loadScores();
+  let remoteScoresReady = false;
+  let saveScoresTimer = null;
 
   const $ = (selector) => document.querySelector(selector);
   const state = {
@@ -83,6 +86,55 @@
 
   function saveScores() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
+    queueRemoteSave();
+  }
+
+  async function loadRemoteScores() {
+    try {
+      const response = await fetch(SCORES_API, {
+        cache: 'no-store',
+        credentials: 'same-origin'
+      });
+      if (!response.ok) return;
+
+      const data = await response.json();
+      remoteScoresReady = true;
+
+      if (data.exists) {
+        scores = data.scores && typeof data.scores === 'object' ? data.scores : {};
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(scores));
+        return;
+      }
+
+      if (Object.keys(scores).length) {
+        await saveRemoteScores();
+      }
+    } catch {
+      remoteScoresReady = false;
+    }
+  }
+
+  function queueRemoteSave() {
+    if (!remoteScoresReady) return;
+    window.clearTimeout(saveScoresTimer);
+    saveScoresTimer = window.setTimeout(saveRemoteScores, 450);
+  }
+
+  async function saveRemoteScores() {
+    if (!remoteScoresReady) return;
+
+    try {
+      await fetch(SCORES_API, {
+        method: 'POST',
+        credentials: 'same-origin',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ scores })
+      });
+    } catch {
+      // Mantem o salvamento local se a conexao cair.
+    }
   }
 
   function slug(value) {
@@ -645,6 +697,7 @@
     const response = await fetch(DATA_URL, { cache: 'no-store' });
     if (!response.ok) throw new Error(`Falha ao carregar ${DATA_URL}`);
     DATA = await response.json();
+    await loadRemoteScores();
 
     const groupSelect = $('#wcGroup');
     Object.keys(DATA.groups).forEach((group) => {
