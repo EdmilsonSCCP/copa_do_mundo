@@ -626,6 +626,7 @@
     scores[id] = scores[id] || { a: '', b: '' };
     scores[id][side] = value === '' ? '' : Math.max(0, Number(value));
     saveScores();
+    saveRemoteScores();
     renderAll();
   }
 
@@ -635,12 +636,14 @@
       scores[match.id] = { a, b };
     });
     saveScores();
+    saveRemoteScores();
     renderAll();
   }
 
   function clearScores() {
     scores = {};
     saveScores();
+    saveRemoteScores();
     renderAll();
   }
 

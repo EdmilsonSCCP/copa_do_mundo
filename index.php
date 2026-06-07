@@ -118,6 +118,6 @@ $pageScripts = ['/scripts/worldcup.js'];
 </main>
 
 <?php include __DIR__ . '/footer.php'; ?>
-<script src="/scripts/worldcup.js" defer></script>
+<script src="/scripts/worldcup.js?v=<?= filemtime(__DIR__ . '/scripts/worldcup.js') ?>" defer></script>
 </body>
 </html>
