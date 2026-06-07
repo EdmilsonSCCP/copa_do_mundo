@@ -2,7 +2,7 @@
 declare(strict_types=1);
 require __DIR__ . '/../includes/auth_boot.php';
 
-// Se jÃ¡ estiver logado, manda para a home
+// Se já estiver logado, manda para a home
 if (current_user()) {
     header('Location: /index.php');
     exit;
@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($email === '' || $senha === '') {
         $erro = 'Informe e-mail e senha.';
     } else {
-        // Busca usuÃ¡rio
+        // Busca usuário
         $stmt = $db->prepare("SELECT * FROM usuarios WHERE email = :email LIMIT 1");
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch();
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $now = new DateTimeImmutable('now');
 
         if ($user) {
-            // bloqueio temporÃ¡rio
+            // bloqueio temporário
             if (!empty($user['locked_until']) && $now < new DateTimeImmutable($user['locked_until'])) {
                 $erro = 'Conta temporariamente bloqueada. Tente novamente em alguns minutos.';
             } elseif (!password_verify($senha, $user['senha'])) {
@@ -48,7 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                                      WHERE id = :id");
                 $upd->execute([':f' => $fails, ':l' => $lockUntil, ':id' => $user['id']]);
 
-                $erro = 'E-mail ou senha invÃ¡lidos.';
+                $erro = 'E-mail ou senha inválidos.';
             } else {
                 // Senha OK
                 $upd = $db->prepare("UPDATE usuarios
