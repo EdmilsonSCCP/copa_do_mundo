@@ -89,7 +89,7 @@ function movement_label(array $artist): string
   <?php endif; ?>
 
   <section class="chart-toolbar" aria-label="Ações do ranking">
-    <p>Fonte atual: top30_display.json. O botão abaixo baixa ranking, imagens e processa histórico em uma ação.</p>
+    <p>O botão abaixo baixa ranking, imagens e processa histórico em uma ação.</p>
     <a class="refresh-button" href="/spotify.php?refresh=1">Atualizar ranking agora</a>
   </section>
 
