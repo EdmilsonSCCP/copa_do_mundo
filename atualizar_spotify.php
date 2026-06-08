@@ -1,9 +1,12 @@
 <?php
 declare(strict_types=1);
 
-require __DIR__ . '/includes/auth_boot.php';
-require_login();
 require __DIR__ . '/includes/spotify_service.php';
+
+if (PHP_SAPI !== 'cli') {
+    require __DIR__ . '/includes/auth_boot.php';
+    require_login();
+}
 
 header('Content-Type: text/plain; charset=utf-8');
 

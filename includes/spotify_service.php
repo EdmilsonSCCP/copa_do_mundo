@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-function spotify_http_get(string $url): string
+function spotify_http_get(string $url, int $timeout = 20): string
 {
     $context = stream_context_create([
         'http' => [
             'header' => "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36\r\n",
-            'timeout' => 20,
+            'timeout' => $timeout,
         ],
     ]);
 
@@ -52,30 +52,42 @@ function spotify_fetch_top30(string $root): array
     ], $top30);
 }
 
-function spotify_attach_images(array $artists): array
+function spotify_attach_images(array $artists, string $root): array
 {
     $result = [];
+    $cachedArtists = spotify_read_json($root . '/top30_com_imagem.json', []);
+    $cachedImages = [];
+
+    foreach ($cachedArtists as $cachedArtist) {
+        if (!empty($cachedArtist['nome']) && !empty($cachedArtist['imagem'])) {
+            $cachedImages[$cachedArtist['nome']] = $cachedArtist['imagem'];
+        }
+    }
 
     foreach ($artists as $artist) {
-        $query = urlencode($artist['nome']);
-        $image = null;
+        $name = $artist['nome'];
+        $image = $cachedImages[$name] ?? null;
 
-        try {
-            $response = spotify_http_get("https://api.deezer.com/search/artist?q={$query}&limit=1");
-            $data = json_decode($response, true);
-            $image = $data['data'][0]['picture_xl'] ?? $data['data'][0]['picture_big'] ?? null;
-        } catch (Throwable) {
-            $image = null;
+        if (!$image) {
+            $query = urlencode($name);
+
+            try {
+                $response = spotify_http_get("https://api.deezer.com/search/artist?q={$query}&limit=1", 6);
+                $data = json_decode($response, true);
+                $image = $data['data'][0]['picture_xl'] ?? $data['data'][0]['picture_big'] ?? null;
+            } catch (Throwable) {
+                $image = null;
+            }
+
+            usleep(180000);
         }
 
         $result[] = [
             'posicao' => $artist['posicao'],
-            'nome' => $artist['nome'],
+            'nome' => $name,
             'ouvintes' => $artist['ouvintes'],
             'imagem' => $image,
         ];
-
-        usleep(180000);
     }
 
     return $result;
@@ -145,7 +157,7 @@ function spotify_refresh_ranking(string $root): array
     $top30 = spotify_fetch_top30($root);
     spotify_write_json($root . '/top30.json', $top30);
 
-    $withImages = spotify_attach_images($top30);
+    $withImages = spotify_attach_images($top30, $root);
     spotify_write_json($root . '/top30_com_imagem.json', $withImages);
 
     return spotify_process_history($root, $withImages);
