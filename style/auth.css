@@ -118,8 +118,9 @@ a:hover { color: var(--gold); }
 }
 
 .login-brand .logo {
-  width: 126px;
-  margin: 0 0 28px;
+  align-self: center;
+  width: clamp(180px, 40%, 240px);
+  margin: 0 auto 38px;
 }
 
 .eyebrow {
@@ -325,7 +326,7 @@ form {
   .card { padding: 26px 18px; }
   .login-brand,
   .login-panel { padding: 26px 18px; }
-  .login-brand .logo { width: 104px; }
+  .login-brand .logo { width: clamp(150px, 58%, 190px); }
   .form-heading strong,
   .card h1 { font-size: 28px; }
 }
