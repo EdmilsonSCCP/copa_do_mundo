@@ -554,7 +554,7 @@ tr.third td:first-child { border-left: 4px solid var(--warn); }
 
 .fantasy-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   gap: 14px;
 }
 
@@ -644,36 +644,22 @@ tr.third td:first-child { border-left: 4px solid var(--warn); }
 
 .fantasy-match {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 58px auto 58px minmax(0, 1fr);
-  gap: 8px;
-  align-items: start;
-}
-
-.fantasy-status {
-  margin-top: 12px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  padding: 6px 10px;
-  color: var(--muted);
-  background: var(--bg-soft);
-  font-size: 12px;
-  font-weight: 800;
+  grid-template-columns: minmax(0, 1fr) 52px auto 52px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
 }
 
 .fantasy-admin {
   display: grid;
-  grid-template-columns: minmax(120px, 1fr) 58px auto 58px auto;
-  gap: 8px;
+  grid-template-columns: minmax(0, 1fr) 52px auto 52px minmax(0, 1fr);
+  gap: 10px;
   align-items: center;
-  margin-top: 12px;
-  border-top: 1px solid var(--line);
-  padding-top: 12px;
 }
 
-.fantasy-admin span:first-child {
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 900;
+.admin-result-card .btn {
+  margin-top: 12px;
+  width: auto;
+  justify-self: end;
 }
 
 .score-input {
@@ -893,12 +879,12 @@ tr.third td:first-child { border-left: 4px solid var(--warn); }
   }
 
   .fantasy-admin {
-    grid-template-columns: 1fr 48px auto 48px;
+    grid-template-columns: minmax(0, 1fr) 48px auto 48px minmax(0, 1fr);
   }
 
-  .fantasy-admin span:first-child,
-  .fantasy-admin .btn {
-    grid-column: 1 / -1;
+  .admin-result-card .btn {
+    justify-self: stretch;
+    width: 100%;
   }
 
   .ko-team-line {

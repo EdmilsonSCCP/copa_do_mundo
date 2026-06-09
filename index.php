@@ -90,7 +90,6 @@ $pageScripts = ['/scripts/worldcup.js'];
         <p class="eyebrow">Cenários</p>
         <h2>Simulador dos jogos</h2>
       </div>
-      <p>Os placares ficam salvos na sua conta e carregam em outros navegadores.</p>
     </div>
     <div id="wcMatches" class="matches-grid"></div>
   </section>
@@ -101,7 +100,6 @@ $pageScripts = ['/scripts/worldcup.js'];
         <p class="eyebrow">Mundo fantasia</p>
         <h2>Bolao dos amigos</h2>
       </div>
-      <p>Palpite o placar dos proximos jogos: 3 pontos pelo placar exato e 2 pontos acertando o vencedor ou empate.</p>
     </div>
     <div id="wcFantasy" class="fantasy-board"></div>
   </section>

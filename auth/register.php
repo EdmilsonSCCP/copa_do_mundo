@@ -2,51 +2,43 @@
 declare(strict_types=1);
 require __DIR__ . '/../includes/auth_boot.php';
 
-/**
- * SE VOCÊ JÁ ESTÁ LOGADO, VAI PARA A HOME
- */
 if (current_user()) {
     header('Location: /index.php');
     exit;
 }
 
-$erro   = '';
-$sucesso = '';
+$erro = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $token   = $_POST['csrf'] ?? '';
-    $nome    = trim($_POST['nome']  ?? '');
-    $email   = trim($_POST['email'] ?? '');
-    $senha   = $_POST['senha']      ?? '';
-    $senha2  = $_POST['senha2']     ?? '';
+    $token = $_POST['csrf'] ?? '';
+    $nome = trim($_POST['nome'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $senha = $_POST['senha'] ?? '';
+    $senha2 = $_POST['senha2'] ?? '';
 
-    // CSRF
     if (!csrf_check($token)) {
-        $erro = 'Sessão expirada. Recarregue a página.';
-    }
-    // validações
-    elseif ($nome === '' || mb_strlen($nome) < 3) {
-        $erro = 'Informe um nome válido (mínimo 3 caracteres).';
+        $erro = 'Sessao expirada. Recarregue a pagina.';
+    } elseif ($nome === '' || mb_strlen($nome) < 3) {
+        $erro = 'Informe um nome valido com pelo menos 3 caracteres.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $erro = 'Informe um e-mail válido.';
+        $erro = 'Informe um e-mail valido.';
     } elseif (mb_strlen($senha) < 8) {
         $erro = 'A senha deve ter pelo menos 8 caracteres.';
     } elseif ($senha !== $senha2) {
-        $erro = 'As senhas não coincidem.';
+        $erro = 'As senhas nao coincidem.';
     } else {
-        // já existe?
         $stmt = $db->prepare('SELECT id FROM usuarios WHERE email = :e LIMIT 1');
         $stmt->execute([':e' => $email]);
-        if ($stmt->fetch()) {
-            $erro = 'Já existe uma conta com este e-mail.';
-        } else {
-            // cria usuário (role padrão = user)
-            $hash = password_hash($senha, PASSWORD_DEFAULT);
 
+        if ($stmt->fetch()) {
+            $erro = 'Ja existe uma conta com este e-mail.';
+        } else {
+            $hash = password_hash($senha, PASSWORD_DEFAULT);
             $ins = $db->prepare(
                 'INSERT INTO usuarios (nome, email, senha, role, created_at)
                  VALUES (:n, :e, :s, :r, NOW())'
             );
+
             $ok = $ins->execute([
                 ':n' => $nome,
                 ':e' => $email,
@@ -55,15 +47,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
 
             if ($ok) {
-                // Se quiser exigir verificação de e-mail, aqui seria gerado um token
-                // e enviado o link por e-mail. Por enquanto, apenas direcionamos
-                // para o login com mensagem de sucesso.
-                $_SESSION['flash_ok'] = 'Conta criada com sucesso! Faça login.';
+                $_SESSION['flash_ok'] = 'Conta criada com sucesso! Faca login.';
                 header('Location: /auth/login.php');
                 exit;
-            } else {
-                $erro = 'Não foi possível criar a conta. Tente novamente.';
             }
+
+            $erro = 'Nao foi possivel criar a conta. Tente novamente.';
         }
     }
 }
@@ -71,98 +60,185 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
 ?>
 <!doctype html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Criar conta</title>
+<title>Criar conta | Le Group</title>
 <style>
-    :root{
-        --bg:#0b0b0c;
-        --card:#121214;
-        --text:#f1f5f9;
-        --muted:#9aa4b2;
-        --input:#1c1d20;
-        --border:#2a2b31;
-        --primary:#000;        /* botão preto */
-        --primary-hover:#111;
-        --ring: rgba(255,255,255,.06);
-        --danger-bg:#2b1212; --danger:#fca5a5;
-        --ok-bg:#10291b; --ok:#86efac;
+    :root {
+        --bg: #05080f;
+        --card: #101722;
+        --text: #f1f5f9;
+        --muted: #9aa8bd;
+        --input: #0b1220;
+        --border: #24344d;
+        --primary: #ffffff;
+        --primary-hover: #dce8ff;
+        --accent: #3182ff;
+        --ring: rgba(49,130,255,.18);
+        --danger-bg: #2b1212;
+        --danger: #fca5a5;
+        --ok-bg: #10291b;
+        --ok: #86efac;
     }
-    *{box-sizing:border-box}
-    body{
-        margin:0; font-family: system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Helvetica Neue",Arial;
-        min-height:100dvh; display:grid; place-items:center;
-        background:radial-gradient(1000px 600px at 50% -10%, #1a1b21 0, #0b0b0c 70%);
-        color:var(--text);
+
+    * { box-sizing: border-box; }
+
+    body {
+        margin: 0;
+        min-height: 100dvh;
+        color: var(--text);
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, "Helvetica Neue", Arial, sans-serif;
+        background:
+            radial-gradient(900px 520px at 50% -20%, rgba(49,130,255,.22), transparent 62%),
+            linear-gradient(180deg, #07111f 0%, #05080f 70%);
     }
-    .card{
-        width:min(92vw,720px);
-        background:var(--card);
-        padding:48px 28px 36px;
-        border-radius:18px;
-        box-shadow:0 12px 40px var(--ring);
-        border:1px solid var(--border);
+
+    .auth-shell {
+        min-height: 100dvh;
+        display: grid;
+        place-items: center;
+        padding: 28px 16px;
     }
-    .logo{display:block;margin:0 auto 18px;width:140px;height:auto;object-fit:contain}
-    h1{text-align:center;margin:6px 0 26px;font-size:28px}
-    .field{margin:12px 0}
-    .input{
-        width:100%; padding:14px 16px; border-radius:10px;
-        border:1px solid var(--border); background:var(--input);
-        color:var(--text); outline:none; font-size:16px;
+
+    .card {
+        width: min(94vw, 760px);
+        padding: 34px;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: linear-gradient(180deg, rgba(16,23,34,.98), rgba(10,15,24,.98));
+        box-shadow: 0 22px 70px rgba(0,0,0,.36), 0 0 0 1px var(--ring);
     }
-    .input::placeholder{color:#768194}
-    .input:focus{border-color:#3b3c42; box-shadow:0 0 0 4px rgba(255,255,255,.03)}
-    .btn{
-        width:100%; padding:14px 18px; margin-top:18px;
-        border:0; border-radius:12px; font-size:16px; font-weight:700;
-        color:#fff; background:var(--primary); cursor:pointer;
+
+    .brand {
+        margin-bottom: 26px;
+        text-align: center;
     }
-    .btn:hover{background:var(--primary-hover)}
-    .muted{color:var(--muted); font-size:14px; text-align:center; margin-top:16px}
-    .error{background:var(--danger-bg); color:var(--danger); padding:10px 12px; border-radius:10px; margin-bottom:10px; font-size:14px}
-    .ok{background:var(--ok-bg); color:var(--ok); padding:10px 12px; border-radius:10px; margin-bottom:10px; font-size:14px}
-    a{color:#fff; font-weight:600; text-decoration:none}
+
+    .logo {
+        display: block;
+        width: 116px;
+        height: auto;
+        margin: 0 auto 14px;
+        object-fit: contain;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 32px;
+        letter-spacing: 0;
+    }
+
+    .lead {
+        max-width: 520px;
+        margin: 8px auto 0;
+        color: var(--muted);
+        line-height: 1.5;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+    }
+
+    .input {
+        width: 100%;
+        padding: 15px 16px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        outline: none;
+        background: var(--input);
+        color: var(--text);
+        font-size: 16px;
+    }
+
+    .input::placeholder { color: #7c8da5; }
+
+    .input:focus {
+        border-color: var(--accent);
+        box-shadow: 0 0 0 4px rgba(49,130,255,.12);
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 18px;
+        padding: 14px 18px;
+        border: 0;
+        border-radius: 12px;
+        background: var(--primary);
+        color: #07111f;
+        cursor: pointer;
+        font-size: 16px;
+        font-weight: 800;
+    }
+
+    .btn:hover { background: var(--primary-hover); }
+
+    .muted {
+        margin-top: 16px;
+        color: var(--muted);
+        font-size: 14px;
+        text-align: center;
+    }
+
+    .error,
+    .ok {
+        margin-bottom: 14px;
+        padding: 11px 12px;
+        border-radius: 10px;
+        font-size: 14px;
+    }
+
+    .error { background: var(--danger-bg); color: var(--danger); }
+    .ok { background: var(--ok-bg); color: var(--ok); }
+
+    a {
+        color: #fff;
+        font-weight: 800;
+        text-decoration: none;
+    }
+
+    @media (max-width: 640px) {
+        .card { padding: 26px 18px; }
+        .form-grid { grid-template-columns: 1fr; }
+        h1 { font-size: 28px; }
+    }
 </style>
 </head>
 <body>
-<main class="card">
-    <img src="/assets/logo.png" alt="Logo" class="logo">
-    <h1>Criar conta</h1>
-
-    <?php if ($erro): ?>
-        <div class="error"><?= htmlspecialchars($erro, ENT_QUOTES, 'UTF-8') ?></div>
-    <?php endif; ?>
-    <?php if (!empty($_SESSION['flash_ok'])): ?>
-        <div class="ok"><?= htmlspecialchars($_SESSION['flash_ok'], ENT_QUOTES, 'UTF-8') ?></div>
-        <?php unset($_SESSION['flash_ok']); ?>
-    <?php endif; ?>
-
-    <form method="post" action="">
-        <input type="hidden" name="csrf" value="<?= $csrf ?>">
-
-        <div class="field">
-            <input class="input" type="text" name="nome" placeholder="Seu nome" required value="<?= htmlspecialchars($_POST['nome'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+<main class="auth-shell">
+    <section class="card">
+        <div class="brand">
+            <img src="/assets/logo.png" alt="Logo" class="logo">
+            <h1>Criar conta</h1>
+            <p class="lead">Entre no Le Group para participar do bolao, acompanhar a Copa e ver o ranking com seus amigos.</p>
         </div>
 
-        <div class="field">
-            <input class="input" type="email" name="email" placeholder="E-mail" autocomplete="email" required value="<?= htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
-        </div>
+        <?php if ($erro): ?>
+            <div class="error"><?= htmlspecialchars($erro, ENT_QUOTES, 'UTF-8') ?></div>
+        <?php endif; ?>
+        <?php if (!empty($_SESSION['flash_ok'])): ?>
+            <div class="ok"><?= htmlspecialchars($_SESSION['flash_ok'], ENT_QUOTES, 'UTF-8') ?></div>
+            <?php unset($_SESSION['flash_ok']); ?>
+        <?php endif; ?>
 
-        <div class="field">
-            <input class="input" type="password" name="senha" placeholder="Senha (mín. 8 caracteres)" autocomplete="new-password" required>
-        </div>
+        <form method="post" action="">
+            <input type="hidden" name="csrf" value="<?= $csrf ?>">
 
-        <div class="field">
-            <input class="input" type="password" name="senha2" placeholder="Confirmar senha" autocomplete="new-password" required>
-        </div>
+            <div class="form-grid">
+                <input class="input" type="text" name="nome" placeholder="Seu nome" required value="<?= htmlspecialchars($_POST['nome'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                <input class="input" type="email" name="email" placeholder="E-mail" autocomplete="email" required value="<?= htmlspecialchars($_POST['email'] ?? '', ENT_QUOTES, 'UTF-8') ?>">
+                <input class="input" type="password" name="senha" placeholder="Senha (min. 8 caracteres)" autocomplete="new-password" required>
+                <input class="input" type="password" name="senha2" placeholder="Confirmar senha" autocomplete="new-password" required>
+            </div>
 
-        <button class="btn" type="submit">Criar conta</button>
-    </form>
+            <button class="btn" type="submit">Criar conta</button>
+        </form>
 
-    <p class="muted">Já tem conta? <a href="/auth/login.php">Entrar</a></p>
+        <p class="muted">Ja tem conta? <a href="/auth/login.php">Entrar</a></p>
+    </section>
 </main>
 </body>
 </html>

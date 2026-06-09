@@ -222,6 +222,24 @@
     return [g1, g2];
   }
 
+  function matchDateTime(match) {
+    const [day, month, year] = String(match.date).split('/').map(Number);
+    const [hour, minute] = String(match.time).split(':').map(Number);
+    return new Date(year, month - 1, day, hour, minute || 0);
+  }
+
+  function matchStarted(match) {
+    return matchDateTime(match).getTime() <= Date.now();
+  }
+
+  function officialResult(match) {
+    return fantasyState.results?.[match.id] || null;
+  }
+
+  function effectiveScore(match) {
+    return officialResult(match) || scores[match.id] || { a: '', b: '' };
+  }
+
   function standings() {
     const table = {};
 
@@ -246,7 +264,7 @@
     });
 
     DATA.matches.forEach((match) => {
-      const score = scores[match.id];
+      const score = effectiveScore(match);
       if (!score || score.a === '' || score.b === '') return;
 
       const a = Number(score.a);
@@ -425,15 +443,19 @@
 
     $('#wcMatches').innerHTML = matches.map((match) => {
       const [p1, draw, p2] = probs(match.team1, match.team2);
-      const score = scores[match.id] || { a: '', b: '' };
+      const result = officialResult(match);
+      const locked = Boolean(result) || matchStarted(match);
+      const score = effectiveScore(match);
+      const disabled = locked ? 'disabled' : '';
+      const lockLabel = result ? 'Resultado oficial' : matchStarted(match) ? 'Jogo iniciado' : '';
 
       return `<article class="match-card">
-        <div class="card-meta"><span>Grupo ${match.group} - ${match.date} - ${match.time}</span><span>Jogo ${match.id}</span></div>
+        <div class="card-meta"><span>Grupo ${match.group} - ${match.date} - ${match.time}</span><span>${lockLabel || `Jogo ${match.id}`}</span></div>
         <div class="match-score">
           ${teamHTML(match.team1)}
-          <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(score.a)}" data-score-id="${match.id}" data-score-side="a" aria-label="Gols ${escapeHTML(match.team1)}">
+          <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(score.a)}" data-score-id="${match.id}" data-score-side="a" aria-label="Gols ${escapeHTML(match.team1)}" ${disabled}>
           <span class="vs">x</span>
-          <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(score.b)}" data-score-id="${match.id}" data-score-side="b" aria-label="Gols ${escapeHTML(match.team2)}">
+          <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(score.b)}" data-score-id="${match.id}" data-score-side="b" aria-label="Gols ${escapeHTML(match.team2)}" ${disabled}>
           ${teamHTML(match.team2, 'away')}
         </div>
         <div class="pills">
@@ -563,10 +585,12 @@
   function knockoutCard(match) {
     const score = scoreFor(match);
     const result = knockoutResult(match);
-    const disabled = isPlaceholder(match.teamA) || isPlaceholder(match.teamB) ? 'disabled' : '';
+    const locked = matchStarted(match);
+    const disabled = isPlaceholder(match.teamA) || isPlaceholder(match.teamB) || locked ? 'disabled' : '';
+    const meta = locked ? 'Jogo iniciado' : `Jogo ${match.index + 1}`;
 
     return `<article class="ko-card ${result.winner ? 'decided' : ''}">
-      <div class="card-meta"><span>${escapeHTML(cleanSlot(match.fase))}</span><span>Jogo ${match.index + 1}</span></div>
+      <div class="card-meta"><span>${escapeHTML(cleanSlot(match.fase))}</span><span>${meta}</span></div>
       <div class="small">${match.date} - ${match.time}</div>
       <div class="ko-score">
         <div class="ko-team-line">
@@ -655,10 +679,12 @@
     const predictionCards = matches.map((match) => {
       const prediction = fantasyState.predictions?.[match.id] || { a: '', b: '' };
       const result = fantasyState.results?.[match.id] || null;
-      const disabled = result ? 'disabled' : '';
+      const locked = Boolean(result) || matchStarted(match);
+      const disabled = locked ? 'disabled' : '';
+      const label = result ? 'Resultado' : matchStarted(match) ? 'Encerrado' : `Jogo ${match.id}`;
 
       return `<article class="fantasy-card">
-        <div class="card-meta"><span>Grupo ${match.group} - ${match.date} - ${match.time}</span><span>Jogo ${match.id}</span></div>
+        <div class="card-meta"><span>Grupo ${match.group} - ${match.date} - ${match.time}</span><span>${label}</span></div>
         <div class="fantasy-match">
           ${teamHTML(match.team1)}
           <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(prediction.a)}" data-fantasy-id="${match.id}" data-fantasy-side="a" aria-label="Palpite ${escapeHTML(match.team1)}" ${disabled}>
@@ -666,8 +692,6 @@
           <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(prediction.b)}" data-fantasy-id="${match.id}" data-fantasy-side="b" aria-label="Palpite ${escapeHTML(match.team2)}" ${disabled}>
           ${teamHTML(match.team2, 'away')}
         </div>
-        <div class="fantasy-status">${result ? `Resultado oficial: ${result.a} x ${result.b}` : 'Seu palpite fica salvo na sua conta.'}</div>
-        ${fantasyState.is_admin ? adminResultForm(match, result) : ''}
       </article>`;
     }).join('') || '<div class="empty">Todos os jogos ja tem resultado lancado.</div>';
 
@@ -687,6 +711,7 @@
         <h3>Proximo jogo</h3>
         <div class="fantasy-grid">${predictionCards}</div>
       </section>
+      ${fantasyState.is_admin ? adminPanel() : ''}
       <section class="fantasy-section">
         <h3>Ranking</h3>
         <div class="table-card table-wrap">
@@ -699,13 +724,26 @@
   }
 
   function adminResultForm(match, result) {
-    return `<div class="fantasy-admin">
-      <span>Resultado oficial</span>
+    return `<article class="fantasy-card admin-result-card">
+      <div class="card-meta"><span>Grupo ${match.group} - ${match.date} - ${match.time}</span><span>Jogo ${match.id}</span></div>
+      <div class="fantasy-admin">
+        ${teamHTML(match.team1)}
       <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(result?.a ?? '')}" data-result-id="${match.id}" data-result-side="a" aria-label="Resultado ${escapeHTML(match.team1)}">
       <span class="vs">x</span>
       <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(result?.b ?? '')}" data-result-id="${match.id}" data-result-side="b" aria-label="Resultado ${escapeHTML(match.team2)}">
+        ${teamHTML(match.team2, 'away')}
+      </div>
       <button class="btn ghost" type="button" data-result-save="${match.id}">Salvar resultado</button>
-    </div>`;
+    </article>`;
+  }
+
+  function adminPanel() {
+    const matches = fantasyState.matches || [];
+    const cards = matches.map((match) => adminResultForm(match, fantasyState.results?.[match.id] || null)).join('');
+    return `<section class="fantasy-section">
+      <h3>Painel do dono</h3>
+      <div class="fantasy-grid admin-result-grid">${cards}</div>
+    </section>`;
   }
 
   async function postFantasy(payload) {
@@ -735,7 +773,7 @@
     if (a === '' || b === '') return;
     await postFantasy({ action: 'result', match_id: Number(id), a: Number(a), b: Number(b) });
     await loadFantasy();
-    renderFantasy();
+    renderAll();
   }
 
   function renderAll() {
@@ -748,6 +786,14 @@
   }
 
   function setScore(id, side, value) {
+    const match = DATA.matches.find((item) => String(item.id) === String(id));
+    if (match && (officialResult(match) || matchStarted(match))) return;
+    if (String(id).startsWith('ko-')) {
+      const index = Number(String(id).replace('ko-', ''));
+      const knockout = DATA.knockouts[index];
+      if (knockout && matchStarted(knockout)) return;
+    }
+
     scores[id] = scores[id] || { a: '', b: '' };
     scores[id][side] = value === '' ? '' : Math.max(0, Number(value));
     saveScores();
@@ -757,6 +803,7 @@
 
   function autofill() {
     DATA.matches.forEach((match) => {
+      if (officialResult(match) || matchStarted(match)) return;
       const [a, b] = expectedScore(match.team1, match.team2);
       scores[match.id] = { a, b };
     });
