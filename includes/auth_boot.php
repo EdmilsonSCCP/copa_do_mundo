@@ -23,6 +23,10 @@ const REMEMBER_LIFETIME = 12 * 60 * 60;
 const COOKIE_HTTPONLY = true;
 const COOKIE_SAMESITE = 'Lax';
 
+const RECAPTCHA_SITE_KEY = '';
+const RECAPTCHA_SECRET_KEY = '';
+const PASSWORD_RESET_DEBUG_LINK = false;
+
 function is_https_request(): bool
 {
     return (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
@@ -57,6 +61,25 @@ try {
     http_response_code(500);
     exit('Erro de conexÃ£o com o banco.');
 }
+
+function ensure_auth_schema(PDO $db): void
+{
+    $statements = [
+        "ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS reset_token VARCHAR(128) NULL",
+        "ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS reset_expires DATETIME NULL",
+        "ALTER TABLE usuarios ADD INDEX IF NOT EXISTS reset_token_idx (reset_token)",
+    ];
+
+    foreach ($statements as $sql) {
+        try {
+            $db->exec($sql);
+        } catch (Throwable $e) {
+            // Mantem a pagina viva em hospedagens que nao aceitem IF NOT EXISTS.
+        }
+    }
+}
+
+ensure_auth_schema($db);
 
 //////////////////////////////
 // CSRF helpers
@@ -109,6 +132,70 @@ function require_admin(): void
         http_response_code(403);
         exit('Acesso restrito.');
     }
+}
+
+function recaptcha_enabled(): bool
+{
+    return RECAPTCHA_SITE_KEY !== '' && RECAPTCHA_SECRET_KEY !== '';
+}
+
+function recaptcha_script(): string
+{
+    return recaptcha_enabled()
+        ? '<script src="https://www.google.com/recaptcha/api.js" async defer></script>'
+        : '';
+}
+
+function recaptcha_widget(): string
+{
+    if (!recaptcha_enabled()) {
+        return '';
+    }
+
+    return '<div class="recaptcha-wrap"><div class="g-recaptcha" data-sitekey="' .
+        htmlspecialchars(RECAPTCHA_SITE_KEY, ENT_QUOTES, 'UTF-8') .
+        '"></div></div>';
+}
+
+function recaptcha_check(): bool
+{
+    if (!recaptcha_enabled()) {
+        return true;
+    }
+
+    $token = $_POST['g-recaptcha-response'] ?? '';
+    if (!is_string($token) || $token === '') {
+        return false;
+    }
+
+    $payload = http_build_query([
+        'secret' => RECAPTCHA_SECRET_KEY,
+        'response' => $token,
+        'remoteip' => $_SERVER['REMOTE_ADDR'] ?? '',
+    ]);
+
+    $context = stream_context_create([
+        'http' => [
+            'method' => 'POST',
+            'header' => "Content-Type: application/x-www-form-urlencoded\r\n",
+            'content' => $payload,
+            'timeout' => 8,
+        ],
+    ]);
+
+    $response = @file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $context);
+    $data = json_decode((string)$response, true);
+
+    return is_array($data) && ($data['success'] ?? false) === true;
+}
+
+function send_password_reset_email(string $email, string $link): bool
+{
+    $subject = 'Redefinir senha - Le Group';
+    $message = "Recebemos um pedido para redefinir sua senha.\n\nAcesse este link por ate 60 minutos:\n{$link}\n\nSe voce nao pediu isso, ignore este e-mail.";
+    $headers = "From: no-reply@legroup.com.br\r\nContent-Type: text/plain; charset=UTF-8\r\n";
+
+    return @mail($email, $subject, $message, $headers);
 }
 
 //////////////////////////////

@@ -19,6 +19,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!csrf_check($token)) {
         $erro = 'Sessão expirada. Recarregue a página.';
+    } elseif (!recaptcha_check()) {
+        $erro = 'Confirme que voce nao e um robo.';
     } elseif ($email === '' || $senha === '') {
         $erro = 'Informe e-mail e senha.';
     } else {
@@ -105,6 +107,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="dark">
 <title>Entrar</title>
+<?= recaptcha_script() ?>
 <style>
     :root{
         --bg:#000;          /* fundo tela */
@@ -214,6 +217,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
 
     .muted{text-align:center;color:var(--muted);font-size:14px;margin-top:16px}
     .muted a{color:#ddd}
+    .recaptcha-wrap{margin-top:16px;display:flex;justify-content:center}
 </style>
 </head>
 <body>
@@ -244,6 +248,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
             <a href="/auth/forgot.php" class="muted">Esqueci minha senha</a>
         </div>
 
+        <?= recaptcha_widget() ?>
         <button class="btn" type="submit">Entrar</button>
     </form>
 

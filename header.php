@@ -29,6 +29,7 @@ function nav_active(string $path, string $currentPath): string
     <div class="user-area">
       <?php if ($user): ?>
         <span class="hello">Olá, <strong><?= htmlspecialchars($user['nome'], ENT_QUOTES, 'UTF-8') ?></strong></span>
+        <a class="account-link" href="/account/index.php">Minha conta</a>
         <a class="account-link" href="/auth/logout.php">Sair</a>
       <?php else: ?>
         <a class="account-link" href="/auth/login.php">Entrar</a>

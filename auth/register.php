@@ -18,6 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (!csrf_check($token)) {
         $erro = 'Sessao expirada. Recarregue a pagina.';
+    } elseif (!recaptcha_check()) {
+        $erro = 'Confirme que voce nao e um robo.';
     } elseif ($nome === '' || mb_strlen($nome) < 3) {
         $erro = 'Informe um nome valido com pelo menos 3 caracteres.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -65,6 +67,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Criar conta | Le Group</title>
+<?= recaptcha_script() ?>
 <style>
     :root {
         --bg: #05080f;
@@ -193,6 +196,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
 
     .error { background: var(--danger-bg); color: var(--danger); }
     .ok { background: var(--ok-bg); color: var(--ok); }
+    .recaptcha-wrap { margin-top: 16px; display: flex; justify-content: center; }
 
     a {
         color: #fff;
@@ -234,6 +238,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
                 <input class="input" type="password" name="senha2" placeholder="Confirmar senha" autocomplete="new-password" required>
             </div>
 
+            <?= recaptcha_widget() ?>
             <button class="btn" type="submit">Criar conta</button>
         </form>
 
