@@ -30,25 +30,62 @@ function spotify_read_json(string $path, $fallback)
 
 function spotify_write_json(string $path, $data): void
 {
-    file_put_contents($path, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
+    $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    if (!is_string($json)) {
+        throw new RuntimeException("Nao foi possivel gerar JSON para: {$path}");
+    }
+
+    $written = @file_put_contents($path, $json, LOCK_EX);
+    if ($written === false) {
+        throw new RuntimeException("Nao foi possivel gravar o arquivo: {$path}. Verifique permissoes.");
+    }
 }
 
 function spotify_fetch_top30(string $root): array
 {
     $html = spotify_http_get('https://kworb.net/spotify/listeners.html');
 
-    $pattern = '/<tr>\s*<td>(\d+)<\/td>\s*<td class="text">\s*<div>\s*<a href="artist\/[^"]+">([^<]+)<\/a>\s*<\/div>\s*<\/td>\s*<td>([\d,]+)<\/td>/i';
-    preg_match_all($pattern, $html, $matches, PREG_SET_ORDER);
+    preg_match_all('/<tr\b[^>]*>(.*?)<\/tr>/is', $html, $rows);
 
-    $top30 = array_slice($matches, 0, 30);
+    $top30 = [];
+    foreach ($rows[1] ?? [] as $rowHtml) {
+        if (!preg_match('/<a\s+href="artist\/[^"]+">([^<]+)<\/a>/i', $rowHtml, $artistMatch)) {
+            continue;
+        }
+
+        preg_match_all('/<td\b[^>]*>(.*?)<\/td>/is', $rowHtml, $cells);
+        $cells = $cells[1] ?? [];
+
+        if (count($cells) < 3) {
+            continue;
+        }
+
+        $rank = trim(strip_tags($cells[0]));
+        $listeners = trim(strip_tags($cells[2]));
+
+        if (!ctype_digit($rank) || !preg_match('/^\d{1,3}(,\d{3})+$/', $listeners)) {
+            continue;
+        }
+
+        $top30[] = [
+            $rank,
+            html_entity_decode(trim($artistMatch[1]), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
+            $listeners,
+        ];
+
+        if (count($top30) === 30) {
+            break;
+        }
+    }
+
     if (!$top30) {
         throw new RuntimeException('O ranking baixou, mas nenhum artista foi encontrado.');
     }
 
     return array_map(static fn(array $artist): array => [
-        'posicao' => trim($artist[1]),
-        'nome' => html_entity_decode(trim($artist[2]), ENT_QUOTES | ENT_HTML5, 'UTF-8'),
-        'ouvintes' => trim($artist[3]),
+        'posicao' => trim((string)$artist[0]),
+        'nome' => trim((string)$artist[1]),
+        'ouvintes' => trim((string)$artist[2]),
     ], $top30);
 }
 
