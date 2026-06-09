@@ -12,6 +12,16 @@ JSON_FILES=(
   "${ROOT_DIR}/historico_artistas.json"
 )
 
+if ! command -v crontab >/dev/null 2>&1; then
+  echo "crontab nao encontrado. Instalando cron..."
+  sudo apt update
+  sudo apt install -y cron
+fi
+
+if command -v systemctl >/dev/null 2>&1; then
+  sudo systemctl enable --now cron
+fi
+
 echo "Preparando arquivos do Spotify em ${ROOT_DIR}"
 sudo touch "${JSON_FILES[@]}"
 sudo chown admin:www-data "${JSON_FILES[@]}"
