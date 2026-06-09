@@ -23,8 +23,14 @@ const REMEMBER_LIFETIME = 12 * 60 * 60;
 const COOKIE_HTTPONLY = true;
 const COOKIE_SAMESITE = 'Lax';
 
-const RECAPTCHA_SITE_KEY = '';
-const RECAPTCHA_SECRET_KEY = '';
+$localConfigPath = __DIR__ . '/local_config.php';
+$localConfig = is_file($localConfigPath) ? (require $localConfigPath) : [];
+if (!is_array($localConfig)) {
+    $localConfig = [];
+}
+
+define('RECAPTCHA_SITE_KEY', getenv('RECAPTCHA_SITE_KEY') ?: ($localConfig['recaptcha_site_key'] ?? ''));
+define('RECAPTCHA_SECRET_KEY', getenv('RECAPTCHA_SECRET_KEY') ?: ($localConfig['recaptcha_secret_key'] ?? ''));
 const PASSWORD_RESET_DEBUG_LINK = false;
 
 function is_https_request(): bool
