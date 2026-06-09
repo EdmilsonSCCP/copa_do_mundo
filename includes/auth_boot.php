@@ -208,7 +208,11 @@ function send_password_reset_email(string $email, string $link): bool
     $message = "Recebemos um pedido para redefinir sua senha.\n\nAcesse este link por ate 60 minutos:\n{$link}\n\nSe voce nao pediu isso, ignore este e-mail.";
 
     if (SMTP_HOST !== '' && SMTP_USERNAME !== '' && SMTP_PASSWORD !== '') {
-        return smtp_send_mail($email, $subject, $message);
+        $sent = smtp_send_mail($email, $subject, $message);
+        if (!$sent) {
+            error_log('Password reset SMTP delivery failed for ' . $email);
+        }
+        return $sent;
     }
 
     $from = SMTP_FROM_EMAIL !== '' ? SMTP_FROM_EMAIL : 'no-reply@legroup.com.br';
@@ -225,6 +229,7 @@ function smtp_send_mail(string $to, string $subject, string $message): bool
     $socket = @stream_socket_client("{$target}:{$port}", $errno, $errstr, 12, STREAM_CLIENT_CONNECT);
 
     if (!$socket) {
+        error_log("SMTP connection failed to {$target}:{$port} ({$errno}) {$errstr}");
         return false;
     }
 
@@ -241,45 +246,54 @@ function smtp_send_mail(string $to, string $subject, string $message): bool
         return $data;
     };
 
-    $command = static function (string $line, array $expected) use ($socket, $read): bool {
+    $command = static function (string $line, array $expected, string $label = '') use ($socket, $read): bool {
         fwrite($socket, $line . "\r\n");
         $response = $read();
         $code = (int)substr($response, 0, 3);
-        return in_array($code, $expected, true);
+        $ok = in_array($code, $expected, true);
+        if (!$ok) {
+            $safeLine = str_starts_with($line, 'AUTH') || preg_match('/^[A-Za-z0-9+\/=]{8,}$/', $line)
+                ? '[redacted]'
+                : $line;
+            error_log("SMTP command failed {$label}: {$safeLine} | response: " . trim($response));
+        }
+        return $ok;
     };
 
     $response = $read();
     if ((int)substr($response, 0, 3) !== 220) {
+        error_log('SMTP greeting failed: ' . trim($response));
         fclose($socket);
         return false;
     }
 
     $serverName = $_SERVER['SERVER_NAME'] ?? 'legroup.com.br';
-    if (!$command("EHLO {$serverName}", [250])) {
+    if (!$command("EHLO {$serverName}", [250], 'ehlo')) {
         fclose($socket);
         return false;
     }
 
     if (SMTP_ENCRYPTION === 'tls') {
-        if (!$command('STARTTLS', [220])) {
+        if (!$command('STARTTLS', [220], 'starttls')) {
             fclose($socket);
             return false;
         }
 
         if (!stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+            error_log('SMTP TLS negotiation failed');
             fclose($socket);
             return false;
         }
 
-        if (!$command("EHLO {$serverName}", [250])) {
+        if (!$command("EHLO {$serverName}", [250], 'ehlo-after-tls')) {
             fclose($socket);
             return false;
         }
     }
 
-    if (!$command('AUTH LOGIN', [334])
-        || !$command(base64_encode(SMTP_USERNAME), [334])
-        || !$command(base64_encode(SMTP_PASSWORD), [235])) {
+    if (!$command('AUTH LOGIN', [334], 'auth')
+        || !$command(base64_encode(SMTP_USERNAME), [334], 'auth-user')
+        || !$command(base64_encode(SMTP_PASSWORD), [235], 'auth-pass')) {
         fclose($socket);
         return false;
     }
@@ -287,9 +301,9 @@ function smtp_send_mail(string $to, string $subject, string $message): bool
     $from = SMTP_FROM_EMAIL !== '' ? SMTP_FROM_EMAIL : SMTP_USERNAME;
     $fromName = SMTP_FROM_NAME !== '' ? SMTP_FROM_NAME : 'Le Group';
 
-    if (!$command("MAIL FROM:<{$from}>", [250])
-        || !$command("RCPT TO:<{$to}>", [250, 251])
-        || !$command('DATA', [354])) {
+    if (!$command("MAIL FROM:<{$from}>", [250], 'mail-from')
+        || !$command("RCPT TO:<{$to}>", [250, 251], 'rcpt-to')
+        || !$command('DATA', [354], 'data')) {
         fclose($socket);
         return false;
     }
@@ -308,7 +322,10 @@ function smtp_send_mail(string $to, string $subject, string $message): bool
 
     $response = $read();
     $sent = (int)substr($response, 0, 3) === 250;
-    $command('QUIT', [221]);
+    if (!$sent) {
+        error_log('SMTP message body failed: ' . trim($response));
+    }
+    $command('QUIT', [221], 'quit');
     fclose($socket);
 
     return $sent;
