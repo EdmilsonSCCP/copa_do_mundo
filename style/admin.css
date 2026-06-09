@@ -189,6 +189,10 @@
   color: var(--bg);
 }
 
+.admin-link {
+  text-decoration: none;
+}
+
 .danger-btn {
   padding: 7px 12px;
   background: rgba(255, 92, 92, .12);
@@ -200,6 +204,51 @@
   justify-content: flex-end;
   gap: 8px;
   flex-wrap: wrap;
+}
+
+.admin-filters {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(160px, 1fr)) auto auto;
+  gap: 10px;
+  align-items: end;
+}
+
+.admin-filters label {
+  display: grid;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.admin-filters select {
+  width: 100%;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--bg-soft);
+  color: var(--text);
+  padding: 10px 12px;
+}
+
+.clear-filter {
+  align-self: center;
+  text-decoration: none;
+}
+
+.admin-log {
+  display: grid;
+  gap: 6px;
+  padding: 14px;
+  color: var(--muted);
+}
+
+.admin-log code {
+  display: block;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-size: 12px;
 }
 
 .table-wrap {
@@ -241,6 +290,7 @@ td form {
 
   .section-title,
   .health-grid,
+  .admin-filters,
   .card-meta,
   .teams {
     grid-template-columns: 1fr;

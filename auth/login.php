@@ -18,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token = $_POST['csrf'] ?? '';
 
     if (!csrf_check($token)) {
-        $erro = 'Sessao expirada. Recarregue a pagina.';
+        $erro = 'Sessão expirada. Recarregue a página.';
     } elseif (!recaptcha_check()) {
         $erro = 'Confirme que voce nao e um robo.';
     } elseif ($email === '' || $senha === '') {
@@ -120,7 +120,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
             <img src="/assets/logo.png" alt="LE GROUP" class="logo">
             <p class="eyebrow">Central Le Group</p>
             <h1 id="login-title">Entre na sua conta</h1>
-            <p class="lead">Acesse a Copa, o bolao dos amigos e o ranking Spotify em um so lugar.</p>
+            <p class="lead">Acesse a Copa, o bolão dos amigos e o ranking Spotify em um só lugar.</p>
             <div class="login-highlights" aria-label="Recursos do site">
                 <span>Copa 2026</span>
                 <span>Bolao</span>

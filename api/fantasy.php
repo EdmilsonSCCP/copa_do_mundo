@@ -30,31 +30,6 @@ function fantasy_body(): array
     return $data;
 }
 
-function fantasy_tables(PDO $db): void
-{
-    $db->exec(
-        "CREATE TABLE IF NOT EXISTS fantasy_predictions (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            user_id INT NOT NULL,
-            match_id INT NOT NULL,
-            pred_a INT NOT NULL,
-            pred_b INT NOT NULL,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            UNIQUE KEY user_match_prediction (user_id, match_id),
-            INDEX prediction_match_idx (match_id)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
-    );
-
-    $db->exec(
-        "CREATE TABLE IF NOT EXISTS fantasy_results (
-            match_id INT PRIMARY KEY,
-            result_a INT NOT NULL,
-            result_b INT NOT NULL,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
-    );
-}
-
 function fantasy_matches(string $root): array
 {
     $path = $root . '/data/world-cup-2026.json';
@@ -169,6 +144,47 @@ function fantasy_leaderboard(PDO $db, array $results): array
     return $scores;
 }
 
+function fantasy_history(PDO $db, array $matches, array $results): array
+{
+    if (!$results) {
+        return [];
+    }
+
+    $matchMap = fantasy_match_map($matches);
+    $stmt = $db->query(
+        'SELECT fp.user_id, fp.match_id, fp.pred_a, fp.pred_b, fp.updated_at, u.nome
+           FROM fantasy_predictions fp
+           JOIN usuarios u ON u.id = fp.user_id
+          ORDER BY fp.updated_at DESC'
+    );
+    $history = [];
+
+    foreach ($stmt->fetchAll() as $row) {
+        $matchId = (int)$row['match_id'];
+        if (!isset($results[$matchId], $matchMap[$matchId])) {
+            continue;
+        }
+
+        $prediction = ['a' => (int)$row['pred_a'], 'b' => (int)$row['pred_b']];
+        $scored = fantasy_points($prediction, $results[$matchId]);
+        $match = $matchMap[$matchId];
+        $history[] = [
+            'user' => $row['nome'],
+            'match_id' => $matchId,
+            'date' => $match['date'] ?? '',
+            'group' => $match['group'] ?? '',
+            'team1' => $match['team1'] ?? '',
+            'team2' => $match['team2'] ?? '',
+            'prediction' => $prediction,
+            'result' => $results[$matchId],
+            'points' => $scored['points'],
+            'type' => $scored['type'],
+        ];
+    }
+
+    return array_slice($history, 0, 80);
+}
+
 function fantasy_next_matches(array $matches, array $results): array
 {
     $unresolved = array_values(array_filter($matches, static fn(array $match): bool =>
@@ -190,7 +206,7 @@ function fantasy_next_matches(array $matches, array $results): array
 }
 
 try {
-    fantasy_tables($db);
+    ensure_fantasy_schema($db);
 
     $user = current_user();
     $userId = (int)($user['id'] ?? 0);
@@ -207,6 +223,7 @@ try {
             'predictions' => fantasy_user_predictions($db, $userId),
             'results' => $results,
             'leaderboard' => fantasy_leaderboard($db, $results),
+            'history' => fantasy_history($db, $matches, $results),
         ]);
     }
 
@@ -274,5 +291,5 @@ try {
 
     fantasy_json(['ok' => false, 'error' => 'Acao invalida.'], 400);
 } catch (Throwable $e) {
-    fantasy_json(['ok' => false, 'error' => 'Erro ao carregar o bolao.'], 500);
+    fantasy_json(['ok' => false, 'error' => 'Erro ao carregar o bolão.'], 500);
 }

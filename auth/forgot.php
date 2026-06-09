@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
 
     if (!csrf_check($token)) {
-        $erro = 'Sessao expirada. Recarregue a pagina.';
+        $erro = 'Sessão expirada. Recarregue a página.';
     } elseif (!recaptcha_check()) {
         $erro = 'Confirme que voce nao e um robo.';
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {

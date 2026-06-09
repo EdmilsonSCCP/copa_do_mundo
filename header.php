@@ -18,10 +18,17 @@ function nav_active(string $path, string $currentPath): string
       </span>
     </a>
 
-    <nav class="main-nav" aria-label="Navegacao principal">
+    <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false" data-menu-toggle>
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <nav class="main-nav" aria-label="Navegacao principal" data-main-nav>
       <a class="<?= 'nav-link' . nav_active('/dashboard.php', $currentPath) ?>" href="/dashboard.php">Inicio</a>
       <a class="<?= 'nav-link' . nav_active('/index.php', $currentPath) ?>" href="/index.php">Copa do Mundo</a>
       <a class="<?= 'nav-link' . nav_active('/spotify.php', $currentPath) ?>" href="/spotify.php">Spotify</a>
+      <a class="<?= 'nav-link' . nav_active('/spotify-history.php', $currentPath) ?>" href="/spotify-history.php">Historico</a>
       <?php if ($user && is_admin_user($user)): ?>
         <a class="<?= 'nav-link' . nav_active('/admin/index.php', $currentPath) ?>" href="/admin/index.php">Admin</a>
       <?php endif; ?>
@@ -38,3 +45,15 @@ function nav_active(string $path, string $currentPath): string
     </div>
   </div>
 </header>
+<script>
+  (() => {
+    const button = document.querySelector('[data-menu-toggle]');
+    const nav = document.querySelector('[data-main-nav]');
+    if (!button || !nav) return;
+
+    button.addEventListener('click', () => {
+      const open = nav.classList.toggle('is-open');
+      button.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+  })();
+</script>

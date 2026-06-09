@@ -7,15 +7,21 @@ require __DIR__ . '/includes/spotify_service.php';
 
 $notice = '';
 $noticeType = 'info';
+$isAdmin = is_admin_user();
 
 if (isset($_GET['refresh'])) {
-    try {
-        spotify_refresh_ranking(__DIR__);
-        header('Location: /spotify.php?updated=1');
-        exit;
-    } catch (Throwable $e) {
-        $notice = 'Nao consegui atualizar agora: ' . $e->getMessage();
+    if (!$isAdmin) {
+        $notice = 'Atualizacao manual disponivel apenas para admin.';
         $noticeType = 'error';
+    } else {
+        try {
+            spotify_refresh_ranking(__DIR__);
+            header('Location: /spotify.php?updated=1');
+            exit;
+        } catch (Throwable $e) {
+            $notice = 'Não consegui atualizar agora: ' . $e->getMessage();
+            $noticeType = 'error';
+        }
     }
 }
 
@@ -59,7 +65,7 @@ function movement_label(array $artist): string
     }
 
     if (!isset($artist['lw']) || $artist['lw'] === null || $artist['lw'] === '') {
-        return 'Sem posicao anterior';
+        return 'Sem posição anterior';
     }
 
     $rank = (int)$artist['rank'];
@@ -107,7 +113,7 @@ function movement_class(array $artist): string
     <div class="hero-copy">
       <p class="eyebrow">Spotify artists chart</p>
       <h1>Ranking Global do Spotify</h1>
-      <p>Top 30 artistas por ouvintes mensais, com historico de pico, semanas no ranking e movimento da ultima atualizacao.</p>
+      <p>Top 30 artistas por ouvintes mensais, com histórico de pico, semanas no ranking e movimento da última atualização.</p>
     </div>
 
     <?php if ($leader): ?>
@@ -140,10 +146,14 @@ function movement_class(array $artist): string
       <strong>Top <?= count($ranking) ?: 30 ?></strong>
     </article>
     <article>
-      <span>Ultima atualizacao</span>
+      <span>Última atualização</span>
       <strong><?= htmlspecialchars($lastUpdated, ENT_QUOTES, 'UTF-8') ?></strong>
     </article>
-    <a class="refresh-button" href="/spotify.php?refresh=1">Atualizar agora</a>
+    <?php if ($isAdmin): ?>
+      <a class="refresh-button" href="/spotify.php?refresh=1">Atualizar agora</a>
+    <?php else: ?>
+      <a class="refresh-button muted" href="/spotify-history.php">Ver historico</a>
+    <?php endif; ?>
   </section>
 
   <?php if ($ranking): ?>
@@ -200,7 +210,7 @@ function movement_class(array $artist): string
       </ol>
     </section>
   <?php else: ?>
-    <div class="notice">Nao foi possivel carregar o ranking. Use "Atualizar agora" para gerar o JSON.</div>
+    <div class="notice">Não foi possível carregar o ranking. Use "Atualizar agora" para gerar o JSON.</div>
   <?php endif; ?>
 </main>
 

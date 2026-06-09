@@ -32,12 +32,12 @@ function spotify_write_json(string $path, $data): void
 {
     $json = json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     if (!is_string($json)) {
-        throw new RuntimeException("Nao foi possivel gerar JSON para: {$path}");
+        throw new RuntimeException("Não foi possível gerar JSON para: {$path}");
     }
 
     $written = @file_put_contents($path, $json, LOCK_EX);
     if ($written === false) {
-        throw new RuntimeException("Nao foi possivel gravar o arquivo: {$path}. Verifique permissoes.");
+        throw new RuntimeException("Não foi possível gravar o arquivo: {$path}. Verifique permissões.");
     }
 }
 

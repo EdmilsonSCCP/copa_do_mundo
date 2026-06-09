@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $senha2 = $_POST['senha2'] ?? '';
 
     if (!csrf_check($token)) {
-        $erro = 'Sessao expirada. Recarregue a pagina.';
+        $erro = 'Sessão expirada. Recarregue a página.';
     } elseif (!recaptcha_check()) {
         $erro = 'Confirme que voce nao e um robo.';
     } elseif ($nome === '' || mb_strlen($nome) < 3) {
@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 exit;
             }
 
-            $erro = 'Nao foi possivel criar a conta. Tente novamente.';
+            $erro = 'Não foi possível criar a conta. Tente novamente.';
         }
     }
 }
@@ -218,7 +218,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
         <div class="brand">
             <img src="/assets/logo.png" alt="Logo" class="logo">
             <h1>Criar conta</h1>
-            <p class="lead">Entre no Le Group para participar do bolao, acompanhar a Copa e ver o ranking com seus amigos.</p>
+            <p class="lead">Entre no Le Group para participar do bolão, acompanhar a Copa e ver o ranking com seus amigos.</p>
         </div>
 
         <?php if ($erro): ?>

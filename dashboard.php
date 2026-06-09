@@ -32,26 +32,7 @@ $stats = [
 ];
 
 try {
-    $db->exec(
-        "CREATE TABLE IF NOT EXISTS fantasy_results (
-            match_id INT PRIMARY KEY,
-            result_a INT NOT NULL,
-            result_b INT NOT NULL,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
-    );
-    $db->exec(
-        "CREATE TABLE IF NOT EXISTS fantasy_predictions (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            user_id INT NOT NULL,
-            match_id INT NOT NULL,
-            pred_a INT NOT NULL,
-            pred_b INT NOT NULL,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            UNIQUE KEY user_match_prediction (user_id, match_id),
-            INDEX prediction_match_idx (match_id)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
-    );
+    ensure_all_schema($db);
 
     foreach ($db->query('SELECT match_id, result_a, result_b FROM fantasy_results')->fetchAll() as $row) {
         $officialResults[(int)$row['match_id']] = [(int)$row['result_a'], (int)$row['result_b']];
@@ -148,7 +129,7 @@ $firstName = explode(' ', trim((string)($user['nome'] ?? '')))[0] ?: 'jogador';
       <p>Acompanhe seus palpites, os proximos jogos da Copa e o Top Spotify sem precisar procurar por tudo no menu.</p>
     </div>
     <div class="dashboard-actions">
-      <a class="dash-btn primary" href="/index.php#fantasy">Ir para o bolao</a>
+      <a class="dash-btn primary" href="/index.php#fantasy">Ir para o bolão</a>
       <a class="dash-btn" href="/index.php#matches">Abrir simulador</a>
       <a class="dash-btn" href="/spotify.php">Ver Spotify</a>
     </div>

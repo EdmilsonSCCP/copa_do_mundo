@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = (string)($_POST['action'] ?? '');
 
     if (!csrf_check($token)) {
-        $erro = 'Sessao expirada. Recarregue a pagina.';
+        $erro = 'Sessão expirada. Recarregue a página.';
     } elseif ($action === 'profile') {
         $nome = trim($_POST['nome'] ?? '');
         $email = trim($_POST['email'] ?? '');
@@ -85,8 +85,28 @@ $stats = [
     'predictions' => 0,
     'simulator' => 0,
 ];
+$predictionRows = [];
+
+function account_prediction_points(int $pa, int $pb, ?array $result): array
+{
+    if (!$result) {
+        return ['points' => 0, 'label' => 'Aguardando'];
+    }
+
+    if ($pa === $result['a'] && $pb === $result['b']) {
+        return ['points' => 3, 'label' => 'Placar exato'];
+    }
+
+    if (($pa <=> $pb) === ($result['a'] <=> $result['b'])) {
+        return ['points' => 2, 'label' => 'Vencedor'];
+    }
+
+    return ['points' => 0, 'label' => 'Errou'];
+}
 
 try {
+    ensure_all_schema($db);
+
     $stmt = $db->prepare('SELECT COUNT(*) FROM fantasy_predictions WHERE user_id = :id');
     $stmt->execute([':id' => $userId]);
     $stats['predictions'] = (int)$stmt->fetchColumn();
@@ -94,6 +114,44 @@ try {
     $stmt = $db->prepare('SELECT COUNT(*) FROM simuladores WHERE user_id = :id');
     $stmt->execute([':id' => $userId]);
     $stats['simulator'] = (int)$stmt->fetchColumn();
+
+    $worldCup = json_decode((string)file_get_contents(__DIR__ . '/../data/world-cup-2026.json'), true);
+    $matches = [];
+    foreach (($worldCup['matches'] ?? []) as $match) {
+        $matches[(int)$match['id']] = $match;
+    }
+
+    $results = [];
+    foreach ($db->query('SELECT match_id, result_a, result_b FROM fantasy_results')->fetchAll() as $row) {
+        $results[(int)$row['match_id']] = ['a' => (int)$row['result_a'], 'b' => (int)$row['result_b']];
+    }
+
+    $stmt = $db->prepare(
+        'SELECT match_id, pred_a, pred_b, updated_at
+           FROM fantasy_predictions
+          WHERE user_id = :id
+          ORDER BY updated_at DESC
+          LIMIT 12'
+    );
+    $stmt->execute([':id' => $userId]);
+
+    foreach ($stmt->fetchAll() as $row) {
+        $matchId = (int)$row['match_id'];
+        if (!isset($matches[$matchId])) {
+            continue;
+        }
+
+        $pa = (int)$row['pred_a'];
+        $pb = (int)$row['pred_b'];
+        $score = account_prediction_points($pa, $pb, $results[$matchId] ?? null);
+        $predictionRows[] = [
+            'match' => $matches[$matchId],
+            'prediction' => "{$pa} x {$pb}",
+            'result' => isset($results[$matchId]) ? $results[$matchId]['a'] . ' x ' . $results[$matchId]['b'] : '-',
+            'points' => $score['points'],
+            'label' => $score['label'],
+        ];
+    }
 } catch (Throwable $e) {
     // Dados auxiliares podem nao existir ainda.
 }
@@ -172,6 +230,39 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
         <button class="btn" type="submit">Alterar senha</button>
       </form>
     </article>
+  </section>
+
+  <section class="account-card account-wide">
+    <h2>Meus últimos palpites</h2>
+    <?php if ($predictionRows): ?>
+      <div class="account-table">
+        <table>
+          <thead>
+            <tr>
+              <th>Jogo</th>
+              <th>Meu palpite</th>
+              <th>Resultado</th>
+              <th>Status</th>
+              <th>Pts</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($predictionRows as $row): ?>
+              <?php $match = $row['match']; ?>
+              <tr>
+                <td><?= htmlspecialchars((string)$match['team1'], ENT_QUOTES, 'UTF-8') ?> x <?= htmlspecialchars((string)$match['team2'], ENT_QUOTES, 'UTF-8') ?></td>
+                <td><?= htmlspecialchars($row['prediction'], ENT_QUOTES, 'UTF-8') ?></td>
+                <td><?= htmlspecialchars($row['result'], ENT_QUOTES, 'UTF-8') ?></td>
+                <td><?= htmlspecialchars($row['label'], ENT_QUOTES, 'UTF-8') ?></td>
+                <td><?= (int)$row['points'] ?></td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    <?php else: ?>
+      <p class="muted">Você ainda não fez palpites no bolão.</p>
+    <?php endif; ?>
   </section>
 </main>
 

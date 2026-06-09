@@ -104,6 +104,27 @@ a { color: inherit; }
   flex: 1;
 }
 
+.menu-toggle {
+  display: none;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--panel) 82%, transparent);
+  padding: 12px;
+}
+
+.menu-toggle span {
+  display: block;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--text);
+}
+
+.menu-toggle span + span {
+  margin-top: 5px;
+}
+
 .nav-link,
 .account-link,
 .btn,
@@ -844,8 +865,9 @@ tr.third td:first-child { border-left: 4px solid var(--warn); }
 
   .site-header__inner {
     padding: 10px 0;
-    align-items: stretch;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
   }
 
   .brand,
@@ -853,9 +875,32 @@ tr.third td:first-child { border-left: 4px solid var(--warn); }
     min-width: 0;
   }
 
-  .main-nav,
+  .menu-toggle {
+    display: block;
+  }
+
+  .main-nav {
+    display: none;
+    grid-column: 1 / -1;
+    grid-template-columns: 1fr;
+    justify-content: stretch;
+    padding: 8px 0 0;
+  }
+
+  .main-nav.is-open {
+    display: grid;
+  }
+
+  .nav-link,
+  .account-link {
+    width: 100%;
+    text-align: center;
+  }
+
   .user-area {
+    grid-column: 1 / -1;
     justify-content: flex-start;
+    flex-wrap: wrap;
   }
 
   .wc-hero {

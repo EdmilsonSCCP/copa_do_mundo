@@ -30,43 +30,6 @@ function admin_match_map(array $matches): array
     return $map;
 }
 
-function admin_tables(PDO $db): void
-{
-    $db->exec(
-        "CREATE TABLE IF NOT EXISTS fantasy_results (
-            match_id INT PRIMARY KEY,
-            result_a INT NOT NULL,
-            result_b INT NOT NULL,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
-    );
-
-    $db->exec(
-        "CREATE TABLE IF NOT EXISTS fantasy_predictions (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            user_id INT NOT NULL,
-            match_id INT NOT NULL,
-            pred_a INT NOT NULL,
-            pred_b INT NOT NULL,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            UNIQUE KEY user_match_prediction (user_id, match_id),
-            INDEX prediction_match_idx (match_id)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
-    );
-
-    $db->exec(
-        "CREATE TABLE IF NOT EXISTS simuladores (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            user_id INT NOT NULL,
-            simulator_key VARCHAR(80) NOT NULL,
-            payload LONGTEXT NOT NULL,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            UNIQUE KEY user_simulator (user_id, simulator_key),
-            INDEX simulator_user_idx (user_id)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
-    );
-}
-
 function admin_results(PDO $db): array
 {
     $rows = $db->query('SELECT match_id, result_a, result_b FROM fantasy_results')->fetchAll();
@@ -114,18 +77,21 @@ function admin_delete_user(PDO $db, int $userId): void
     }
 }
 
-admin_tables($db);
+ensure_all_schema($db);
 $matches = admin_matches();
 $matchMap = admin_match_map($matches);
 $currentUser = current_user();
 $currentUserId = (int)($currentUser['id'] ?? 0);
+$filterGroup = strtoupper(trim((string)($_GET['group'] ?? '')));
+$filterStatus = trim((string)($_GET['status'] ?? ''));
+$filterDate = trim((string)($_GET['date'] ?? ''));
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token = $_POST['csrf'] ?? '';
     $action = (string)($_POST['action'] ?? '');
 
     if (!csrf_check($token)) {
-        $flashError = 'Sessao expirada. Recarregue a pagina.';
+        $flashError = 'Sessão expirada. Recarregue a página.';
     } elseif ($action === 'save_result') {
         $matchId = (int)($_POST['match_id'] ?? 0);
         $a = filter_var($_POST['result_a'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
@@ -160,31 +126,51 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $userId = (int)($_POST['user_id'] ?? 0);
 
         if ($userId <= 0 || $userId === $currentUserId) {
-            $flashError = 'Nao da para excluir esta conta.';
+            $flashError = 'Não dá para excluir esta conta.';
         } else {
             admin_delete_user($db, $userId);
-            $flashOk = 'Usuario excluido.';
+            $flashOk = 'Usuário excluído.';
         }
     }
 }
 
 $results = admin_results($db);
 $users = admin_users($db);
+$filteredMatches = array_values(array_filter($matches, static function (array $match) use ($filterGroup, $filterStatus, $filterDate, $results): bool {
+    $matchId = (int)$match['id'];
+    if ($filterGroup !== '' && strtoupper((string)$match['group']) !== $filterGroup) {
+        return false;
+    }
+    if ($filterDate !== '' && (string)$match['date'] !== $filterDate) {
+        return false;
+    }
+    if ($filterStatus === 'filled' && !isset($results[$matchId])) {
+        return false;
+    }
+    if ($filterStatus === 'pending' && isset($results[$matchId])) {
+        return false;
+    }
+    return true;
+}));
+$availableDates = array_values(array_unique(array_map(static fn(array $match): string => (string)$match['date'], $matches)));
+$spotifyLog = is_file('/home/admin/spotify_update.log')
+    ? array_slice(file('/home/admin/spotify_update.log', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) ?: [], -8)
+    : [];
 $systemStatus = [
     [
         'label' => 'Analytics',
         'ok' => GOOGLE_ANALYTICS_ID !== '',
-        'detail' => GOOGLE_ANALYTICS_ID !== '' ? GOOGLE_ANALYTICS_ID : 'Nao configurado',
+        'detail' => GOOGLE_ANALYTICS_ID !== '' ? GOOGLE_ANALYTICS_ID : 'Não configurado',
     ],
     [
         'label' => 'reCAPTCHA',
         'ok' => recaptcha_enabled(),
-        'detail' => recaptcha_enabled() ? 'Ativo no login/cadastro' : 'Nao configurado',
+        'detail' => recaptcha_enabled() ? 'Ativo no login/cadastro' : 'Não configurado',
     ],
     [
         'label' => 'E-mail',
         'ok' => SMTP_HOST !== '' && SMTP_USERNAME !== '' && SMTP_PASSWORD !== '',
-        'detail' => SMTP_HOST !== '' ? SMTP_HOST : 'Nao configurado',
+        'detail' => SMTP_HOST !== '' ? SMTP_HOST : 'Não configurado',
     ],
     [
         'label' => 'Spotify',
@@ -244,13 +230,60 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
   <section class="admin-section">
     <div class="section-title">
       <div>
+        <p class="eyebrow">Spotify</p>
+        <h2>Atualização do ranking</h2>
+      </div>
+      <a class="admin-btn admin-link" href="/spotify.php?refresh=1">Atualizar Spotify agora</a>
+    </div>
+    <div class="admin-card admin-log">
+      <?php if ($spotifyLog): ?>
+        <?php foreach ($spotifyLog as $line): ?>
+          <code><?= htmlspecialchars($line, ENT_QUOTES, 'UTF-8') ?></code>
+        <?php endforeach; ?>
+      <?php else: ?>
+        <span>Nenhum log encontrado ainda.</span>
+      <?php endif; ?>
+    </div>
+  </section>
+
+  <section class="admin-section">
+    <div class="section-title">
+      <div>
         <p class="eyebrow">Copa do Mundo</p>
         <h2>Placares oficiais</h2>
       </div>
     </div>
 
+    <form class="admin-filters" method="get" action="">
+      <label>Grupo
+        <select name="group">
+          <option value="">Todos</option>
+          <?php foreach (range('A', 'L') as $group): ?>
+            <option value="<?= $group ?>" <?= $filterGroup === $group ? 'selected' : '' ?>>Grupo <?= $group ?></option>
+          <?php endforeach; ?>
+        </select>
+      </label>
+      <label>Status
+        <select name="status">
+          <option value="">Todos</option>
+          <option value="pending" <?= $filterStatus === 'pending' ? 'selected' : '' ?>>Pendentes</option>
+          <option value="filled" <?= $filterStatus === 'filled' ? 'selected' : '' ?>>Com placar</option>
+        </select>
+      </label>
+      <label>Data
+        <select name="date">
+          <option value="">Todas</option>
+          <?php foreach ($availableDates as $date): ?>
+            <option value="<?= htmlspecialchars($date, ENT_QUOTES, 'UTF-8') ?>" <?= $filterDate === $date ? 'selected' : '' ?>><?= htmlspecialchars($date, ENT_QUOTES, 'UTF-8') ?></option>
+          <?php endforeach; ?>
+        </select>
+      </label>
+      <button class="admin-btn" type="submit">Filtrar</button>
+      <a class="danger-btn clear-filter" href="/admin/index.php">Limpar</a>
+    </form>
+
     <div class="admin-match-grid">
-      <?php foreach ($matches as $match): ?>
+      <?php foreach ($filteredMatches as $match): ?>
         <?php
           $id = (int)$match['id'];
           $result = $results[$id] ?? null;
@@ -327,7 +360,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
                     <button class="danger-btn" type="submit">Excluir</button>
                   </form>
                 <?php else: ?>
-                  <span class="self">Voce</span>
+                  <span class="self">Você</span>
                 <?php endif; ?>
               </td>
             </tr>

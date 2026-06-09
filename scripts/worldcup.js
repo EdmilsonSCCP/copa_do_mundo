@@ -75,7 +75,8 @@
     next_matches: [],
     predictions: {},
     results: {},
-    leaderboard: []
+    leaderboard: [],
+    history: []
   };
 
   const $ = (selector) => document.querySelector(selector);
@@ -661,7 +662,8 @@
         next_matches: [],
         predictions: {},
         results: {},
-        leaderboard: []
+        leaderboard: [],
+        history: []
       };
     }
   }
@@ -671,7 +673,7 @@
     if (!root) return;
 
     if (fantasyState.ok === false) {
-      root.innerHTML = '<div class="empty">Nao foi possivel carregar o bolao agora.</div>';
+      root.innerHTML = '<div class="empty">Não foi possível carregar o bolão agora.</div>';
       return;
     }
 
@@ -695,7 +697,7 @@
           <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(prediction.b)}" data-fantasy-id="${match.id}" data-fantasy-side="b" aria-label="Palpite ${escapeHTML(match.team2)}" ${disabled}>
         </div>
       </article>`;
-    }).join('') || '<div class="empty">Todos os jogos ja tem resultado lancado.</div>';
+    }).join('') || '<div class="empty">Todos os jogos já têm resultado lançado.</div>';
 
     const rankingRows = (fantasyState.leaderboard || []).map((row) => `
       <tr>
@@ -707,10 +709,22 @@
         <td class="numeric">${row.predictions}</td>
       </tr>
     `).join('');
+    const historyRows = (fantasyState.history || []).map((row) => {
+      const typeLabel = row.type === 'exact' ? 'Placar exato' : row.type === 'outcome' ? 'Vencedor' : 'Errou';
+      return `<tr>
+        <td>${escapeHTML(row.date)}</td>
+        <td>${escapeHTML(row.user)}</td>
+        <td>${escapeHTML(row.team1)} x ${escapeHTML(row.team2)}</td>
+        <td class="numeric">${escapeHTML(row.prediction.a)} x ${escapeHTML(row.prediction.b)}</td>
+        <td class="numeric">${escapeHTML(row.result.a)} x ${escapeHTML(row.result.b)}</td>
+        <td>${typeLabel}</td>
+        <td class="numeric">${escapeHTML(row.points)}</td>
+      </tr>`;
+    }).join('');
 
     root.innerHTML = `
       <section class="fantasy-section">
-        <h3>Proximo jogo</h3>
+        <h3>Próximo jogo</h3>
         <div class="fantasy-grid">${predictionCards}</div>
       </section>
       <section class="fantasy-section">
@@ -718,7 +732,16 @@
         <div class="table-card table-wrap">
           <table>
             <thead><tr><th>Pos</th><th>Pessoa</th><th class="numeric">Pts</th><th class="numeric">Exatos</th><th class="numeric">Venc.</th><th class="numeric">Palpites</th></tr></thead>
-            <tbody>${rankingRows || '<tr><td colspan="6">Ninguem palpitou ainda.</td></tr>'}</tbody>
+            <tbody>${rankingRows || '<tr><td colspan="6">Ninguém palpitou ainda.</td></tr>'}</tbody>
+          </table>
+        </div>
+      </section>
+      <section class="fantasy-section">
+        <h3>Últimos pontos</h3>
+        <div class="table-card table-wrap">
+          <table>
+            <thead><tr><th>Data</th><th>Pessoa</th><th>Jogo</th><th class="numeric">Palpite</th><th class="numeric">Resultado</th><th>Tipo</th><th class="numeric">Pts</th></tr></thead>
+            <tbody>${historyRows || '<tr><td colspan="7">Ainda não tem jogo pontuado.</td></tr>'}</tbody>
           </table>
         </div>
       </section>`;
@@ -731,9 +754,9 @@
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
     });
-    if (!response.ok) throw new Error('Falha ao salvar bolao');
+    if (!response.ok) throw new Error('Falha ao salvar bolão');
     const data = await response.json();
-    if (!data.ok) throw new Error(data.error || 'Falha ao salvar bolao');
+    if (!data.ok) throw new Error(data.error || 'Falha ao salvar bolão');
   }
 
   async function saveFantasyPrediction(id) {
@@ -822,7 +845,7 @@
       const target = event.target;
       if (!target.matches('[data-fantasy-id]')) return;
       saveFantasyPrediction(target.dataset.fantasyId).catch(() => {
-        alert('Nao consegui salvar seu palpite agora.');
+        alert('Não consegui salvar seu palpite agora.');
       });
     });
 
@@ -877,6 +900,6 @@
   init().catch((error) => {
     console.error(error);
     const shell = $('.wc-shell');
-    if (shell) shell.insertAdjacentHTML('afterbegin', '<div class="empty">Nao foi possivel carregar os dados da Copa.</div>');
+    if (shell) shell.insertAdjacentHTML('afterbegin', '<div class="empty">Não foi possível carregar os dados da Copa.</div>');
   });
 })();

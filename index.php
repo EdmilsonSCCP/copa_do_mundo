@@ -25,14 +25,14 @@ $pageScripts = ['/scripts/worldcup.js'];
     <div class="wc-hero-copy">
       <p class="eyebrow">Simulador interativo</p>
       <h1 id="wc-title">Copa do Mundo 2026</h1>
-      <p class="hero-text">Classificacao, jogos, probabilidades, melhores terceiros, mata-mata e projecoes em uma central limpa para acompanhar o torneio.</p>
+      <p class="hero-text">Classificação, jogos, probabilidades, melhores terceiros, mata-mata e projeções em uma central limpa para acompanhar o torneio.</p>
       <div class="hero-actions">
-        <button class="btn primary" type="button" data-action="autofill">Preencher projecao</button>
+        <button class="btn primary" type="button" data-action="autofill">Preencher projeção</button>
         <button class="btn ghost" type="button" data-action="clear">Limpar placares</button>
       </div>
     </div>
     <div class="wc-hero-panel" aria-label="Resumo do torneio">
-      <span>48 selecoes</span>
+      <span>48 seleções</span>
       <strong>12 grupos</strong>
       <small>Top 2 + 8 melhores terceiros avançam</small>
     </div>
@@ -40,7 +40,7 @@ $pageScripts = ['/scripts/worldcup.js'];
 
   <section class="wc-controls" aria-label="Filtros do dashboard">
     <label>
-      <span>Buscar selecao</span>
+      <span>Buscar seleção</span>
       <input id="wcSearch" type="search" placeholder="Brasil, Franca, Japao...">
     </label>
     <label>
@@ -52,11 +52,11 @@ $pageScripts = ['/scripts/worldcup.js'];
     <button class="btn theme" type="button" data-action="theme">Tema escuro</button>
   </section>
 
-  <nav class="wc-tabs" aria-label="Secoes da Copa">
-    <button class="tab active" type="button" data-tab="standings">Classificacao</button>
-    <button class="tab" type="button" data-tab="schedule">Horarios e probabilidades</button>
+  <nav class="wc-tabs" aria-label="Seções da Copa">
+    <button class="tab active" type="button" data-tab="standings">Classificação</button>
+    <button class="tab" type="button" data-tab="schedule">Horários e probabilidades</button>
     <button class="tab" type="button" data-tab="matches">Simulador</button>
-    <button class="tab" type="button" data-tab="fantasy">Bolao</button>
+    <button class="tab" type="button" data-tab="fantasy">Bolão</button>
     <button class="tab" type="button" data-tab="knockout">Mata-mata</button>
     <button class="tab" type="button" data-tab="stats">Estatísticas</button>
   </nav>
@@ -65,9 +65,9 @@ $pageScripts = ['/scripts/worldcup.js'];
     <div class="section-head">
       <div>
         <p class="eyebrow">Fase de grupos</p>
-        <h2>Classificacao por grupo</h2>
+        <h2>Classificação por grupo</h2>
       </div>
-      <p>Criterios usados: pontos, saldo, gols pro e rating estimado.</p>
+      <p>Critérios usados: pontos, saldo, gols pró e rating estimado.</p>
     </div>
     <div id="wcStandings" class="standings-grid"></div>
     <h2 class="subsection-title">Melhores terceiros</h2>
@@ -78,9 +78,9 @@ $pageScripts = ['/scripts/worldcup.js'];
     <div class="section-head">
       <div>
         <p class="eyebrow">Agenda</p>
-        <h2>Horarios e probabilidades</h2>
+        <h2>Horários e probabilidades</h2>
       </div>
-      <p>Horarios em Brasilia e favorito estimado por rating relativo.</p>
+      <p>Horários em Brasília e favorito estimado por rating relativo.</p>
     </div>
     <div id="wcSchedule" class="schedule-groups"></div>
   </section>
@@ -99,7 +99,7 @@ $pageScripts = ['/scripts/worldcup.js'];
     <div class="section-head">
       <div>
         <p class="eyebrow">Mundo fantasia</p>
-        <h2>Bolao dos amigos</h2>
+        <h2>Bolão dos amigos</h2>
       </div>
     </div>
     <div id="wcFantasy" class="fantasy-board"></div>
@@ -120,9 +120,9 @@ $pageScripts = ['/scripts/worldcup.js'];
     <div class="section-head">
       <div>
         <p class="eyebrow">Projeções</p>
-        <h2>Estatisticas avancadas</h2>
+        <h2>Estatísticas avançadas</h2>
       </div>
-      <p>Probabilidades derivadas de rating, posicao atual e caminho estimado.</p>
+      <p>Probabilidades derivadas de rating, posição atual e caminho estimado.</p>
     </div>
     <div id="wcStats" class="stats-grid"></div>
   </section>

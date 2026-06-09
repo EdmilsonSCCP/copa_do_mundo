@@ -15,21 +15,6 @@ function json_response(array $payload, int $status = 200): void
     exit;
 }
 
-function ensure_simulator_table(PDO $db): void
-{
-    $db->exec(
-        "CREATE TABLE IF NOT EXISTS simuladores (
-            id INT AUTO_INCREMENT PRIMARY KEY,
-            user_id INT NOT NULL,
-            simulator_key VARCHAR(80) NOT NULL,
-            payload LONGTEXT NOT NULL,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-            UNIQUE KEY user_simulator (user_id, simulator_key),
-            INDEX simulator_user_idx (user_id)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4"
-    );
-}
-
 function read_json_body(): array
 {
     $raw = file_get_contents('php://input') ?: '';
@@ -46,11 +31,11 @@ $user = current_user();
 $userId = (int)($user['id'] ?? 0);
 
 if ($userId <= 0) {
-    json_response(['ok' => false, 'error' => 'Usuario invalido.'], 401);
+        json_response(['ok' => false, 'error' => 'Usuário inválido.'], 401);
 }
 
 try {
-    ensure_simulator_table($db);
+    ensure_simulator_schema($db);
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         $stmt = $db->prepare(
@@ -89,7 +74,7 @@ try {
 
         $payload = json_encode($scores, JSON_UNESCAPED_UNICODE);
         if (!is_string($payload)) {
-            json_response(['ok' => false, 'error' => 'Nao foi possivel salvar.'], 400);
+            json_response(['ok' => false, 'error' => 'Não foi possível salvar.'], 400);
         }
 
         $stmt = $db->prepare(

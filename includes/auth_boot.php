@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 /**
  * Bootstrap de autenticacao
- * - Sessao
+ * - Sessão
  * - Conexao PDO
  * - Helpers (CSRF, usuario atual, lembrar-me)
  */
@@ -66,7 +66,7 @@ function is_https_request(): bool
 $cookieSecure = is_https_request();
 
 //////////////////////////////
-// Sessao segura
+// Sessão segura
 //////////////////////////////
 ini_set('session.use_strict_mode', '1');
 ini_set('session.cookie_httponly', COOKIE_HTTPONLY ? '1' : '0');
@@ -92,23 +92,7 @@ try {
     exit('Erro de conexao com o banco.');
 }
 
-function ensure_auth_schema(PDO $db): void
-{
-    $statements = [
-        "ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS reset_token VARCHAR(128) NULL",
-        "ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS reset_expires DATETIME NULL",
-        "ALTER TABLE usuarios ADD INDEX IF NOT EXISTS reset_token_idx (reset_token)",
-    ];
-
-    foreach ($statements as $sql) {
-        try {
-            $db->exec($sql);
-        } catch (Throwable $e) {
-            // Mantem a pagina viva em hospedagens que nao aceitem IF NOT EXISTS.
-        }
-    }
-}
-
+require_once __DIR__ . '/schema.php';
 ensure_auth_schema($db);
 
 //////////////////////////////
@@ -130,7 +114,7 @@ function csrf_check(?string $token): bool
 }
 
 //////////////////////////////
-// Usuario atual
+// Usuário atual
 //////////////////////////////
 function current_user(): ?array
 {

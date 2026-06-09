@@ -104,6 +104,37 @@ label {
   font-weight: 900;
 }
 
+.account-wide {
+  overflow: hidden;
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.account-table {
+  overflow-x: auto;
+}
+
+.account-table table {
+  width: 100%;
+  min-width: 680px;
+  border-collapse: collapse;
+}
+
+.account-table th,
+.account-table td {
+  border-bottom: 1px solid var(--line);
+  padding: 11px 10px;
+  text-align: left;
+}
+
+.account-table th {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
 .notice {
   border-radius: 8px;
   padding: 12px 14px;

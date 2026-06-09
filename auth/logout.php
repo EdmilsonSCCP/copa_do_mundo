@@ -1,32 +1,32 @@
 <?php
 declare(strict_types=1);
+
 require __DIR__ . '/../includes/auth_boot.php';
 
-// Se houver cookie remember, zera no banco tambÃ©m
-if (!empty($_COOKIE['remember'])) {
+$user = current_user();
+
+if ($user && !empty($_COOKIE['remember'])) {
     try {
-        $stmt = $db->prepare("UPDATE usuarios SET remember_token = NULL, remember_expires = NULL WHERE remember_token = :t");
-        $stmt->execute([':t' => $_COOKIE['remember']]);
+        $stmt = $db->prepare('UPDATE usuarios SET remember_token = NULL, remember_expires = NULL WHERE id = :id');
+        $stmt->execute([':id' => (int)$user['id']]);
     } catch (Throwable $e) {
-        // silencioso
+        // Logout nao deve falhar por causa de limpeza auxiliar.
     }
-    setcookie('remember', '', [
-        'expires'  => time() - 3600,
-        'path'     => '/',
-        'secure'   => $cookieSecure,
-        'httponly' => COOKIE_HTTPONLY,
-        'samesite' => COOKIE_SAMESITE,
-    ]);
 }
 
-// Destroi a sessÃ£o
+setcookie('remember', '', [
+    'expires' => time() - 3600,
+    'path' => '/',
+    'secure' => is_https_request(),
+    'httponly' => COOKIE_HTTPONLY,
+    'samesite' => COOKIE_SAMESITE,
+]);
+
 $_SESSION = [];
+
 if (session_status() === PHP_SESSION_ACTIVE) {
     session_destroy();
 }
 
-// Volta para login
 header('Location: /auth/login.php');
 exit;
-
-
