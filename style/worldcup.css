@@ -1,27 +1,27 @@
 :root {
-  --bg: #07111f;
-  --bg-soft: #0d1b2e;
-  --panel: #10223a;
-  --panel-2: #152c4a;
-  --text: #f5f8ff;
-  --muted: #aab7cc;
-  --line: rgba(255, 255, 255, .12);
-  --accent: #21c56f;
-  --accent-2: #2f80ed;
-  --warn: #f5b942;
-  --bad: #ee5d5d;
-  --shadow: 0 22px 60px rgba(0, 0, 0, .28);
+  --bg: #0b090a;
+  --bg-soft: #161112;
+  --panel: #1c1517;
+  --panel-2: #2a1b1f;
+  --text: #fff7f2;
+  --muted: #b9aaa4;
+  --line: rgba(255, 238, 230, .13);
+  --accent: #e63b3f;
+  --accent-2: #f0b84b;
+  --warn: #f0b84b;
+  --bad: #ff6363;
+  --shadow: 0 22px 60px rgba(0, 0, 0, .36);
 }
 
 :root[data-theme="light"] {
-  --bg: #f3f7fb;
-  --bg-soft: #e8eef7;
-  --panel: #ffffff;
-  --panel-2: #eef4fb;
-  --text: #101928;
-  --muted: #5c6b82;
-  --line: rgba(16, 25, 40, .13);
-  --shadow: 0 18px 42px rgba(16, 25, 40, .12);
+  --bg: #fff7f1;
+  --bg-soft: #f3e7df;
+  --panel: #fffdfb;
+  --panel-2: #f7ece5;
+  --text: #221616;
+  --muted: #715f59;
+  --line: rgba(67, 38, 33, .16);
+  --shadow: 0 18px 42px rgba(67, 38, 33, .12);
 }
 
 * { box-sizing: border-box; }
@@ -33,8 +33,8 @@ body {
   min-height: 100vh;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
   background:
-    radial-gradient(circle at top left, rgba(47, 128, 237, .26), transparent 34rem),
-    radial-gradient(circle at top right, rgba(33, 197, 111, .16), transparent 30rem),
+    radial-gradient(circle at top left, rgba(230, 59, 63, .26), transparent 34rem),
+    radial-gradient(circle at top right, rgba(240, 184, 75, .14), transparent 30rem),
     var(--bg);
   color: var(--text);
 }
@@ -125,8 +125,8 @@ a { color: inherit; }
 .nav-link.active,
 .nav-link:hover,
 .account-link:hover {
-  border-color: color-mix(in srgb, var(--accent-2) 70%, white);
-  background: color-mix(in srgb, var(--accent-2) 28%, var(--panel));
+  border-color: color-mix(in srgb, var(--accent) 72%, white);
+  background: color-mix(in srgb, var(--accent) 22%, var(--panel));
 }
 
 .user-area {
@@ -187,7 +187,7 @@ a { color: inherit; }
   width: 22rem;
   height: 22rem;
   border-radius: 999px;
-  border: 44px solid rgba(33, 197, 111, .14);
+  border: 44px solid rgba(230, 59, 63, .14);
 }
 
 .eyebrow {
@@ -229,7 +229,7 @@ h1 {
 }
 
 .btn.primary {
-  background: linear-gradient(135deg, var(--accent-2), var(--accent));
+  background: linear-gradient(135deg, var(--accent), #8f1f28);
   border-color: transparent;
   color: white;
 }
@@ -246,8 +246,8 @@ h1 {
   flex-direction: column;
   justify-content: flex-end;
   background:
-    linear-gradient(160deg, rgba(33, 197, 111, .18), transparent 44%),
-    linear-gradient(25deg, rgba(47, 128, 237, .26), transparent 58%),
+    linear-gradient(160deg, rgba(230, 59, 63, .22), transparent 44%),
+    linear-gradient(25deg, rgba(240, 184, 75, .18), transparent 58%),
     var(--panel);
 }
 
@@ -302,8 +302,8 @@ h1 {
 .wc-controls input:focus,
 .wc-controls select:focus,
 .score-input:focus {
-  border-color: var(--accent-2);
-  box-shadow: 0 0 0 4px rgba(47, 128, 237, .16);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 4px rgba(230, 59, 63, .16);
 }
 
 .wc-tabs {
@@ -321,7 +321,7 @@ h1 {
 .tab.active {
   color: white;
   border-color: transparent;
-  background: var(--accent-2);
+  background: var(--accent);
 }
 
 .hidden { display: none !important; }
@@ -507,7 +507,7 @@ tr.third td:first-child { border-left: 4px solid var(--warn); }
   display: block;
   height: 100%;
   border-radius: inherit;
-  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  background: linear-gradient(90deg, var(--accent), var(--accent-2));
 }
 
 .bar-fill.win { background: var(--accent); }

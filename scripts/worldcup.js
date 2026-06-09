@@ -57,13 +57,13 @@
   };
 
   const CONTINENT_COLORS = {
-    Europa: '#4f8cff',
+    Europa: '#d9c7aa',
     'America do Sul': '#35b66b',
     'America do Norte': '#f0a33a',
     Africa: '#e05d44',
-    Asia: '#9b6bff',
-    Oceania: '#19a9b7',
-    'Asia/Oceania': '#19a9b7'
+    Asia: '#b9865a',
+    Oceania: '#c65757',
+    'Asia/Oceania': '#c65757'
   };
 
   let DATA = null;

@@ -90,8 +90,8 @@ label {
 }
 
 .input:focus {
-  border-color: color-mix(in srgb, var(--accent-2) 70%, white);
-  box-shadow: 0 0 0 4px rgba(47, 128, 237, .14);
+  border-color: color-mix(in srgb, var(--accent) 72%, white);
+  box-shadow: 0 0 0 4px rgba(230, 59, 63, .14);
 }
 
 .btn {

@@ -1,14 +1,14 @@
 :root {
-  --bg: #07111f;
-  --bg-soft: #0d1b2e;
-  --panel: #10223a;
-  --panel-2: #152c4a;
-  --text: #f5f8ff;
-  --muted: #aab7cc;
-  --line: rgba(255, 255, 255, .12);
-  --accent: #21c56f;
-  --accent-2: #2f80ed;
-  --shadow: 0 22px 60px rgba(0, 0, 0, .28);
+  --bg: #0b090a;
+  --bg-soft: #161112;
+  --panel: #1c1517;
+  --panel-2: #2a1b1f;
+  --text: #fff7f2;
+  --muted: #b9aaa4;
+  --line: rgba(255, 238, 230, .13);
+  --accent: #e63b3f;
+  --accent-2: #f0b84b;
+  --shadow: 0 22px 60px rgba(0, 0, 0, .36);
 }
 
 * { box-sizing: border-box; }
@@ -94,8 +94,8 @@ a { color: inherit; }
 .nav-link.active,
 .nav-link:hover,
 .account-link:hover {
-  border-color: color-mix(in srgb, var(--accent-2) 70%, white);
-  background: color-mix(in srgb, var(--accent-2) 28%, var(--panel));
+  border-color: color-mix(in srgb, var(--accent) 72%, white);
+  background: color-mix(in srgb, var(--accent) 22%, var(--panel));
 }
 
 .user-area {
