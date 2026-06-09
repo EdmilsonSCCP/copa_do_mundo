@@ -162,6 +162,7 @@ a { color: inherit; }
 .group-card,
 .match-card,
 .schedule-card,
+.fantasy-card,
 .ko-card,
 .stat-card {
   border: 1px solid var(--line);
@@ -355,6 +356,7 @@ h1 {
 .table-card,
 .match-card,
 .schedule-card,
+.fantasy-card,
 .ko-card,
 .stat-card {
   border-radius: 8px;
@@ -538,6 +540,24 @@ tr.third td:first-child { border-left: 4px solid var(--warn); }
   gap: 26px;
 }
 
+.fantasy-board,
+.fantasy-section {
+  display: grid;
+  gap: 18px;
+}
+
+.fantasy-section h3 {
+  margin: 0;
+  border-left: 5px solid var(--accent-2);
+  padding-left: 12px;
+}
+
+.fantasy-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 14px;
+}
+
 .knockout-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
@@ -552,6 +572,7 @@ tr.third td:first-child { border-left: 4px solid var(--warn); }
 
 .schedule-card,
 .match-card,
+.fantasy-card,
 .ko-card,
 .stat-card {
   padding: 14px;
@@ -619,6 +640,40 @@ tr.third td:first-child { border-left: 4px solid var(--warn); }
   grid-template-columns: minmax(0, 1fr) 58px auto 58px minmax(0, 1fr);
   gap: 8px;
   align-items: start;
+}
+
+.fantasy-match {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 58px auto 58px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+
+.fantasy-status {
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 6px 10px;
+  color: var(--muted);
+  background: var(--bg-soft);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.fantasy-admin {
+  display: grid;
+  grid-template-columns: minmax(120px, 1fr) 58px auto 58px auto;
+  gap: 8px;
+  align-items: center;
+  margin-top: 12px;
+  border-top: 1px solid var(--line);
+  padding-top: 12px;
+}
+
+.fantasy-admin span:first-child {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
 }
 
 .score-input {
@@ -831,6 +886,19 @@ tr.third td:first-child { border-left: 4px solid var(--warn); }
 
   .match-score {
     grid-template-columns: minmax(0, 1fr) 48px auto 48px minmax(0, 1fr);
+  }
+
+  .fantasy-match {
+    grid-template-columns: minmax(0, 1fr) 48px auto 48px minmax(0, 1fr);
+  }
+
+  .fantasy-admin {
+    grid-template-columns: 1fr 48px auto 48px;
+  }
+
+  .fantasy-admin span:first-child,
+  .fantasy-admin .btn {
+    grid-column: 1 / -1;
   }
 
   .ko-team-line {

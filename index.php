@@ -55,6 +55,7 @@ $pageScripts = ['/scripts/worldcup.js'];
     <button class="tab active" type="button" data-tab="standings">Classificação</button>
     <button class="tab" type="button" data-tab="schedule">Horários e probabilidades</button>
     <button class="tab" type="button" data-tab="matches">Simulador</button>
+    <button class="tab" type="button" data-tab="fantasy">Bolao</button>
     <button class="tab" type="button" data-tab="knockout">Mata-mata</button>
     <button class="tab" type="button" data-tab="stats">Estatísticas</button>
   </nav>
@@ -92,6 +93,17 @@ $pageScripts = ['/scripts/worldcup.js'];
       <p>Os placares ficam salvos na sua conta e carregam em outros navegadores.</p>
     </div>
     <div id="wcMatches" class="matches-grid"></div>
+  </section>
+
+  <section class="tab-panel hidden" id="fantasy" data-panel="fantasy">
+    <div class="section-head">
+      <div>
+        <p class="eyebrow">Mundo fantasia</p>
+        <h2>Bolao dos amigos</h2>
+      </div>
+      <p>Palpite o placar dos proximos jogos: 3 pontos pelo placar exato e 2 pontos acertando o vencedor ou empate.</p>
+    </div>
+    <div id="wcFantasy" class="fantasy-board"></div>
   </section>
 
   <section class="tab-panel hidden" id="knockout" data-panel="knockout">

@@ -3,6 +3,7 @@
   const THEME_KEY = 'copa2026-theme';
   const DATA_URL = '/data/world-cup-2026.json';
   const SCORES_API = '/api/simulator.php';
+  const FANTASY_API = '/api/fantasy.php';
 
   const TEAM_META = {
     franca: ['FR', 'Europa', 1],
@@ -69,6 +70,13 @@
   let scores = loadScores();
   let remoteScoresReady = false;
   let saveScoresTimer = null;
+  let fantasyState = {
+    is_admin: false,
+    next_matches: [],
+    predictions: {},
+    results: {},
+    leaderboard: []
+  };
 
   const $ = (selector) => document.querySelector(selector);
   const state = {
@@ -614,12 +622,129 @@
     }).join('') || '<div class="empty">Nenhuma seleção encontrada.</div>';
   }
 
+  async function loadFantasy() {
+    try {
+      const response = await fetch(FANTASY_API, {
+        cache: 'no-store',
+        credentials: 'same-origin'
+      });
+      if (!response.ok) throw new Error('Bolao indisponivel');
+      fantasyState = await response.json();
+    } catch {
+      fantasyState = {
+        ok: false,
+        is_admin: false,
+        next_matches: [],
+        predictions: {},
+        results: {},
+        leaderboard: []
+      };
+    }
+  }
+
+  function renderFantasy() {
+    const root = $('#wcFantasy');
+    if (!root) return;
+
+    if (fantasyState.ok === false) {
+      root.innerHTML = '<div class="empty">Nao foi possivel carregar o bolao agora.</div>';
+      return;
+    }
+
+    const matches = fantasyState.next_matches || [];
+    const predictionCards = matches.map((match) => {
+      const prediction = fantasyState.predictions?.[match.id] || { a: '', b: '' };
+      const result = fantasyState.results?.[match.id] || null;
+      const disabled = result ? 'disabled' : '';
+
+      return `<article class="fantasy-card">
+        <div class="card-meta"><span>Grupo ${match.group} - ${match.date} - ${match.time}</span><span>Jogo ${match.id}</span></div>
+        <div class="fantasy-match">
+          ${teamHTML(match.team1)}
+          <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(prediction.a)}" data-fantasy-id="${match.id}" data-fantasy-side="a" aria-label="Palpite ${escapeHTML(match.team1)}" ${disabled}>
+          <span class="vs">x</span>
+          <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(prediction.b)}" data-fantasy-id="${match.id}" data-fantasy-side="b" aria-label="Palpite ${escapeHTML(match.team2)}" ${disabled}>
+          ${teamHTML(match.team2, 'away')}
+        </div>
+        <div class="fantasy-status">${result ? `Resultado oficial: ${result.a} x ${result.b}` : 'Seu palpite fica salvo na sua conta.'}</div>
+        ${fantasyState.is_admin ? adminResultForm(match, result) : ''}
+      </article>`;
+    }).join('') || '<div class="empty">Todos os jogos ja tem resultado lancado.</div>';
+
+    const rankingRows = (fantasyState.leaderboard || []).map((row) => `
+      <tr>
+        <td>${row.position}</td>
+        <td>${escapeHTML(row.name)}</td>
+        <td class="numeric">${row.points}</td>
+        <td class="numeric">${row.exact}</td>
+        <td class="numeric">${row.outcome}</td>
+        <td class="numeric">${row.predictions}</td>
+      </tr>
+    `).join('');
+
+    root.innerHTML = `
+      <section class="fantasy-section">
+        <h3>Proximo jogo</h3>
+        <div class="fantasy-grid">${predictionCards}</div>
+      </section>
+      <section class="fantasy-section">
+        <h3>Ranking</h3>
+        <div class="table-card table-wrap">
+          <table>
+            <thead><tr><th>Pos</th><th>Pessoa</th><th class="numeric">Pts</th><th class="numeric">Exatos</th><th class="numeric">Venc.</th><th class="numeric">Palpites</th></tr></thead>
+            <tbody>${rankingRows || '<tr><td colspan="6">Ninguem palpitou ainda.</td></tr>'}</tbody>
+          </table>
+        </div>
+      </section>`;
+  }
+
+  function adminResultForm(match, result) {
+    return `<div class="fantasy-admin">
+      <span>Resultado oficial</span>
+      <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(result?.a ?? '')}" data-result-id="${match.id}" data-result-side="a" aria-label="Resultado ${escapeHTML(match.team1)}">
+      <span class="vs">x</span>
+      <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(result?.b ?? '')}" data-result-id="${match.id}" data-result-side="b" aria-label="Resultado ${escapeHTML(match.team2)}">
+      <button class="btn ghost" type="button" data-result-save="${match.id}">Salvar resultado</button>
+    </div>`;
+  }
+
+  async function postFantasy(payload) {
+    const response = await fetch(FANTASY_API, {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    if (!response.ok) throw new Error('Falha ao salvar bolao');
+    const data = await response.json();
+    if (!data.ok) throw new Error(data.error || 'Falha ao salvar bolao');
+  }
+
+  async function saveFantasyPrediction(id) {
+    const a = document.querySelector(`[data-fantasy-id="${id}"][data-fantasy-side="a"]`)?.value;
+    const b = document.querySelector(`[data-fantasy-id="${id}"][data-fantasy-side="b"]`)?.value;
+    if (a === '' || b === '') return;
+    await postFantasy({ action: 'prediction', match_id: Number(id), a: Number(a), b: Number(b) });
+    await loadFantasy();
+    renderFantasy();
+  }
+
+  async function saveFantasyResult(id) {
+    const a = document.querySelector(`[data-result-id="${id}"][data-result-side="a"]`)?.value;
+    const b = document.querySelector(`[data-result-id="${id}"][data-result-side="b"]`)?.value;
+    if (a === '' || b === '') return;
+    await postFantasy({ action: 'result', match_id: Number(id), a: Number(a), b: Number(b) });
+    await loadFantasy();
+    renderFantasy();
+  }
+
   function renderAll() {
     renderStandings();
     renderSchedule();
     renderMatches();
     renderKnockout();
     renderStats();
+    renderFantasy();
   }
 
   function setScore(id, side, value) {
@@ -677,11 +802,26 @@
       setScore(target.dataset.scoreId, target.dataset.scoreSide, target.value);
     });
 
+    document.addEventListener('change', (event) => {
+      const target = event.target;
+      if (!target.matches('[data-fantasy-id]')) return;
+      saveFantasyPrediction(target.dataset.fantasyId).catch(() => {
+        alert('Nao consegui salvar seu palpite agora.');
+      });
+    });
+
     document.addEventListener('click', (event) => {
       const action = event.target.closest('[data-action]')?.dataset.action;
       if (action === 'autofill') autofill();
       if (action === 'clear') clearScores();
       if (action === 'theme') toggleTheme();
+
+      const resultButton = event.target.closest('[data-result-save]');
+      if (resultButton) {
+        saveFantasyResult(resultButton.dataset.resultSave).catch(() => {
+          alert('Nao consegui salvar o resultado agora.');
+        });
+      }
 
       const tab = event.target.closest('[data-tab]');
       if (tab) {
@@ -701,6 +841,7 @@
     if (!response.ok) throw new Error(`Falha ao carregar ${DATA_URL}`);
     DATA = await response.json();
     await loadRemoteScores();
+    await loadFantasy();
 
     const groupSelect = $('#wcGroup');
     Object.keys(DATA.groups).forEach((group) => {
