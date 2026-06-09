@@ -3,7 +3,7 @@ declare(strict_types=1);
 require __DIR__ . '/../includes/auth_boot.php';
 
 if (current_user()) {
-    header('Location: /index.php');
+    header('Location: /dashboard.php');
     exit;
 }
 
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     ]);
                 }
 
-                header('Location: /index.php');
+                header('Location: /dashboard.php');
                 exit;
             }
         } else {

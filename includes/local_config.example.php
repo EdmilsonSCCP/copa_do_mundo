@@ -1,5 +1,9 @@
 <?php
 return [
+    'db_host' => '127.0.0.1',
+    'db_name' => 'legroup_db',
+    'db_user' => 'legroup',
+    'db_pass' => 'SENHA_DO_BANCO',
     'recaptcha_site_key' => 'SUA_CHAVE_DE_SITE',
     'recaptcha_secret_key' => 'SUA_CHAVE_SECRETA',
     'smtp_host' => 'email-ssl.com.br',

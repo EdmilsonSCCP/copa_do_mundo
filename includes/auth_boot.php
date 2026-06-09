@@ -2,24 +2,16 @@
 declare(strict_types=1);
 
 /**
- * Bootstrap de autenticaÃ§Ã£o
- * - SessÃ£o
- * - ConexÃ£o PDO
- * - Helpers (CSRF, usuÃ¡rio atual, lembrar-me)
+ * Bootstrap de autenticacao
+ * - Sessao
+ * - Conexao PDO
+ * - Helpers (CSRF, usuario atual, lembrar-me)
  */
-
-//////////////////////////////
-// Config
-//////////////////////////////
-const DB_HOST = '127.0.0.1';
-const DB_NAME = 'legroup_db';
-const DB_USER = 'legroup';
-const DB_PASS = 'Grupo20@*';   // <- sua senha do MySQL
 
 // 12h em segundos
 const REMEMBER_LIFETIME = 12 * 60 * 60;
 
-// SeguranÃ§a (ajuste o domÃ­nio se tiver subdomÃ­nios)
+// Seguranca
 const COOKIE_HTTPONLY = true;
 const COOKIE_SAMESITE = 'Lax';
 
@@ -29,6 +21,10 @@ if (!is_array($localConfig)) {
     $localConfig = [];
 }
 
+define('DB_HOST', getenv('DB_HOST') ?: ($localConfig['db_host'] ?? '127.0.0.1'));
+define('DB_NAME', getenv('DB_NAME') ?: ($localConfig['db_name'] ?? 'legroup_db'));
+define('DB_USER', getenv('DB_USER') ?: ($localConfig['db_user'] ?? 'legroup'));
+define('DB_PASS', getenv('DB_PASS') ?: ($localConfig['db_pass'] ?? ''));
 define('RECAPTCHA_SITE_KEY', getenv('RECAPTCHA_SITE_KEY') ?: ($localConfig['recaptcha_site_key'] ?? ''));
 define('RECAPTCHA_SECRET_KEY', getenv('RECAPTCHA_SECRET_KEY') ?: ($localConfig['recaptcha_secret_key'] ?? ''));
 define('SMTP_HOST', getenv('SMTP_HOST') ?: ($localConfig['smtp_host'] ?? ''));
@@ -70,7 +66,7 @@ function is_https_request(): bool
 $cookieSecure = is_https_request();
 
 //////////////////////////////
-// SessÃ£o (segura)
+// Sessao segura
 //////////////////////////////
 ini_set('session.use_strict_mode', '1');
 ini_set('session.cookie_httponly', COOKIE_HTTPONLY ? '1' : '0');
@@ -82,7 +78,7 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 }
 
 //////////////////////////////
-// ConexÃ£o PDO
+// Conexao PDO
 //////////////////////////////
 try {
     $dsn = 'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4';
@@ -93,7 +89,7 @@ try {
     ]);
 } catch (Throwable $e) {
     http_response_code(500);
-    exit('Erro de conexÃ£o com o banco.');
+    exit('Erro de conexao com o banco.');
 }
 
 function ensure_auth_schema(PDO $db): void
@@ -134,7 +130,7 @@ function csrf_check(?string $token): bool
 }
 
 //////////////////////////////
-// UsuÃ¡rio atual
+// Usuario atual
 //////////////////////////////
 function current_user(): ?array
 {
@@ -399,7 +395,7 @@ if (!current_user() && !empty($_COOKIE['remember'])) {
                 'role'  => $u['role'],
             ];
         } else {
-            // invÃ¡lido/expirado -> limpa
+            // Invalido ou expirado: limpa.
             setcookie('remember', '', [
                 'expires'  => time() - 3600,
                 'path'     => '/',
@@ -409,7 +405,7 @@ if (!current_user() && !empty($_COOKIE['remember'])) {
             ]);
         }
     } catch (Throwable $e) {
-        // Silencioso para nÃ£o quebrar a navegaÃ§Ã£o
+        // Silencioso para nao quebrar a navegacao.
     }
 }
 

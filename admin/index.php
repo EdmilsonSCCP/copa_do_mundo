@@ -170,6 +170,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $results = admin_results($db);
 $users = admin_users($db);
+$systemStatus = [
+    [
+        'label' => 'Analytics',
+        'ok' => GOOGLE_ANALYTICS_ID !== '',
+        'detail' => GOOGLE_ANALYTICS_ID !== '' ? GOOGLE_ANALYTICS_ID : 'Nao configurado',
+    ],
+    [
+        'label' => 'reCAPTCHA',
+        'ok' => recaptcha_enabled(),
+        'detail' => recaptcha_enabled() ? 'Ativo no login/cadastro' : 'Nao configurado',
+    ],
+    [
+        'label' => 'E-mail',
+        'ok' => SMTP_HOST !== '' && SMTP_USERNAME !== '' && SMTP_PASSWORD !== '',
+        'detail' => SMTP_HOST !== '' ? SMTP_HOST : 'Nao configurado',
+    ],
+    [
+        'label' => 'Spotify',
+        'ok' => is_writable(__DIR__ . '/../top30_display.json'),
+        'detail' => is_file(__DIR__ . '/../top30_display.json')
+            ? 'Atualizado em ' . date('d/m/Y H:i', filemtime(__DIR__ . '/../top30_display.json'))
+            : 'JSON ainda nao gerado',
+    ],
+];
 $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
 ?>
 <!doctype html>
@@ -198,6 +222,24 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
   <?php if ($flashError): ?>
     <div class="notice error"><?= htmlspecialchars($flashError, ENT_QUOTES, 'UTF-8') ?></div>
   <?php endif; ?>
+
+  <section class="admin-section">
+    <div class="section-title">
+      <div>
+        <p class="eyebrow">Sistema</p>
+        <h2>Saude do site</h2>
+      </div>
+    </div>
+    <div class="health-grid">
+      <?php foreach ($systemStatus as $item): ?>
+        <article class="admin-card health-item <?= $item['ok'] ? 'is-ok' : 'is-warn' ?>">
+          <span><?= $item['ok'] ? 'OK' : 'Verificar' ?></span>
+          <strong><?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?></strong>
+          <small><?= htmlspecialchars($item['detail'], ENT_QUOTES, 'UTF-8') ?></small>
+        </article>
+      <?php endforeach; ?>
+    </div>
+  </section>
 
   <section class="admin-section">
     <div class="section-title">

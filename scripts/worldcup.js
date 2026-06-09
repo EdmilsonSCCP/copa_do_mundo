@@ -834,12 +834,20 @@
 
       const tab = event.target.closest('[data-tab]');
       if (tab) {
-        document.querySelectorAll('[data-tab]').forEach((button) => button.classList.remove('active'));
-        document.querySelectorAll('[data-panel]').forEach((panel) => panel.classList.add('hidden'));
-        tab.classList.add('active');
-        document.querySelector(`[data-panel="${tab.dataset.tab}"]`)?.classList.remove('hidden');
+        activateTab(tab.dataset.tab);
       }
     });
+  }
+
+  function activateTab(tabName) {
+    const tab = document.querySelector(`[data-tab="${tabName}"]`);
+    const panel = document.querySelector(`[data-panel="${tabName}"]`);
+    if (!tab || !panel) return;
+
+    document.querySelectorAll('[data-tab]').forEach((button) => button.classList.remove('active'));
+    document.querySelectorAll('[data-panel]').forEach((item) => item.classList.add('hidden'));
+    tab.classList.add('active');
+    panel.classList.remove('hidden');
   }
 
   async function init() {
@@ -861,11 +869,14 @@
     });
 
     renderAll();
+    if (window.location.hash) {
+      activateTab(window.location.hash.slice(1));
+    }
   }
 
   init().catch((error) => {
     console.error(error);
     const shell = $('.wc-shell');
-    if (shell) shell.insertAdjacentHTML('afterbegin', '<div class="empty">Não foi possível carregar os dados da Copa.</div>');
+    if (shell) shell.insertAdjacentHTML('afterbegin', '<div class="empty">Nao foi possivel carregar os dados da Copa.</div>');
   });
 })();
