@@ -106,8 +106,8 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Minha conta | Le Group</title>
-  <link rel="stylesheet" href="/style/site.css">
-  <link rel="stylesheet" href="/style/account.css">
+  <link rel="stylesheet" href="/style/site.css?v=<?= filemtime(__DIR__ . '/../style/site.css') ?>">
+  <link rel="stylesheet" href="/style/account.css?v=<?= filemtime(__DIR__ . '/../style/account.css') ?>">
 </head>
 <body>
 <?php include __DIR__ . '/../header.php'; ?>

@@ -60,7 +60,7 @@ unset($_SESSION['reset_preview_link']);
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Recuperar senha | Le Group</title>
 <?= recaptcha_script() ?>
-<link rel="stylesheet" href="/style/auth.css">
+<link rel="stylesheet" href="/style/auth.css?v=<?= filemtime(__DIR__ . '/../style/auth.css') ?>">
 </head>
 <body>
 <main class="auth-shell">

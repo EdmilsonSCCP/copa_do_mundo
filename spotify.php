@@ -64,8 +64,8 @@ function movement_label(array $artist): string
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Ranking Global do Spotify | Le Group</title>
   <link rel="preconnect" href="https://cdn-images.dzcdn.net">
-  <link rel="stylesheet" href="/style/site.css">
-  <link rel="stylesheet" href="/style/spotify.css">
+  <link rel="stylesheet" href="/style/site.css?v=<?= filemtime(__DIR__ . '/style/site.css') ?>">
+  <link rel="stylesheet" href="/style/spotify.css?v=<?= filemtime(__DIR__ . '/style/spotify.css') ?>">
 </head>
 <body>
 <?php include __DIR__ . '/header.php'; ?>

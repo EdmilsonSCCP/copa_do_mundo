@@ -13,8 +13,8 @@ $pageScripts = ['/scripts/worldcup.js'];
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= htmlspecialchars($pageTitle) ?> | Le Group</title>
   <link rel="preconnect" href="https://flagcdn.com">
-  <link rel="stylesheet" href="/style/site.css">
-  <link rel="stylesheet" href="/style/worldcup.css">
+  <link rel="stylesheet" href="/style/site.css?v=<?= filemtime(__DIR__ . '/style/site.css') ?>">
+  <link rel="stylesheet" href="/style/worldcup.css?v=<?= filemtime(__DIR__ . '/style/worldcup.css') ?>">
 </head>
 <body>
 <?php include __DIR__ . '/header.php'; ?>
