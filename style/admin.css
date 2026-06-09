@@ -160,6 +160,13 @@
   color: #ffb1b1;
 }
 
+.result-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .table-wrap {
   overflow-x: auto;
 }
@@ -207,7 +214,12 @@ td form {
     text-align: left;
   }
 
-  .admin-btn {
+  .admin-btn,
+  .result-actions {
     justify-self: stretch;
+  }
+
+  .result-actions {
+    display: grid;
   }
 }

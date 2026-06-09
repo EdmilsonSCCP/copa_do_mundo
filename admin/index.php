@@ -146,6 +146,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ]);
             $flashOk = 'Resultado oficial salvo.';
         }
+    } elseif ($action === 'clear_result') {
+        $matchId = (int)($_POST['match_id'] ?? 0);
+
+        if (!isset($matchMap[$matchId])) {
+            $flashError = 'Jogo invalido.';
+        } else {
+            $stmt = $db->prepare('DELETE FROM fantasy_results WHERE match_id = :match_id');
+            $stmt->execute([':match_id' => $matchId]);
+            $flashOk = 'Resultado oficial removido.';
+        }
     } elseif ($action === 'delete_user') {
         $userId = (int)($_POST['user_id'] ?? 0);
 
@@ -204,7 +214,6 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
         ?>
         <form class="admin-card result-card" method="post" action="">
           <input type="hidden" name="csrf" value="<?= $csrf ?>">
-          <input type="hidden" name="action" value="save_result">
           <input type="hidden" name="match_id" value="<?= $id ?>">
 
           <div class="card-meta">
@@ -223,7 +232,12 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
             <input type="number" min="0" inputmode="numeric" name="result_b" value="<?= htmlspecialchars((string)($result['b'] ?? ''), ENT_QUOTES, 'UTF-8') ?>" aria-label="Gols <?= htmlspecialchars((string)$match['team2'], ENT_QUOTES, 'UTF-8') ?>">
           </div>
 
-          <button class="admin-btn" type="submit">Salvar</button>
+          <div class="result-actions">
+            <?php if ($result): ?>
+              <button class="danger-btn" type="submit" name="action" value="clear_result" formnovalidate>Limpar</button>
+            <?php endif; ?>
+            <button class="admin-btn" type="submit" name="action" value="save_result">Salvar</button>
+          </div>
         </form>
       <?php endforeach; ?>
     </div>
