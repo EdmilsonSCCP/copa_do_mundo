@@ -683,14 +683,16 @@
       const disabled = locked ? 'disabled' : '';
       const label = result ? 'Resultado' : matchStarted(match) ? 'Encerrado' : `Jogo ${match.id}`;
 
-      return `<article class="fantasy-card">
+      return `<article class="fantasy-card fantasy-pick-card">
         <div class="card-meta"><span>Grupo ${match.group} - ${match.date} - ${match.time}</span><span>${label}</span></div>
-        <div class="fantasy-match">
-          ${teamHTML(match.team1)}
+        <div class="pick-teams">
+          <div>${teamHTML(match.team1)}</div>
+          <div>${teamHTML(match.team2, 'away')}</div>
+        </div>
+        <div class="pick-score" aria-label="Palpite do jogo">
           <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(prediction.a)}" data-fantasy-id="${match.id}" data-fantasy-side="a" aria-label="Palpite ${escapeHTML(match.team1)}" ${disabled}>
-          <span class="vs">x</span>
+          <span>x</span>
           <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(prediction.b)}" data-fantasy-id="${match.id}" data-fantasy-side="b" aria-label="Palpite ${escapeHTML(match.team2)}" ${disabled}>
-          ${teamHTML(match.team2, 'away')}
         </div>
       </article>`;
     }).join('') || '<div class="empty">Todos os jogos ja tem resultado lancado.</div>';
@@ -711,7 +713,6 @@
         <h3>Proximo jogo</h3>
         <div class="fantasy-grid">${predictionCards}</div>
       </section>
-      ${fantasyState.is_admin ? adminPanel() : ''}
       <section class="fantasy-section">
         <h3>Ranking</h3>
         <div class="table-card table-wrap">
@@ -721,29 +722,6 @@
           </table>
         </div>
       </section>`;
-  }
-
-  function adminResultForm(match, result) {
-    return `<article class="fantasy-card admin-result-card">
-      <div class="card-meta"><span>Grupo ${match.group} - ${match.date} - ${match.time}</span><span>Jogo ${match.id}</span></div>
-      <div class="fantasy-admin">
-        ${teamHTML(match.team1)}
-      <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(result?.a ?? '')}" data-result-id="${match.id}" data-result-side="a" aria-label="Resultado ${escapeHTML(match.team1)}">
-      <span class="vs">x</span>
-      <input class="score-input" type="number" min="0" inputmode="numeric" value="${escapeHTML(result?.b ?? '')}" data-result-id="${match.id}" data-result-side="b" aria-label="Resultado ${escapeHTML(match.team2)}">
-        ${teamHTML(match.team2, 'away')}
-      </div>
-      <button class="btn ghost" type="button" data-result-save="${match.id}">Salvar resultado</button>
-    </article>`;
-  }
-
-  function adminPanel() {
-    const matches = fantasyState.matches || [];
-    const cards = matches.map((match) => adminResultForm(match, fantasyState.results?.[match.id] || null)).join('');
-    return `<section class="fantasy-section">
-      <h3>Painel do dono</h3>
-      <div class="fantasy-grid admin-result-grid">${cards}</div>
-    </section>`;
   }
 
   async function postFantasy(payload) {
@@ -765,15 +743,6 @@
     await postFantasy({ action: 'prediction', match_id: Number(id), a: Number(a), b: Number(b) });
     await loadFantasy();
     renderFantasy();
-  }
-
-  async function saveFantasyResult(id) {
-    const a = document.querySelector(`[data-result-id="${id}"][data-result-side="a"]`)?.value;
-    const b = document.querySelector(`[data-result-id="${id}"][data-result-side="b"]`)?.value;
-    if (a === '' || b === '') return;
-    await postFantasy({ action: 'result', match_id: Number(id), a: Number(a), b: Number(b) });
-    await loadFantasy();
-    renderAll();
   }
 
   function renderAll() {
@@ -862,13 +831,6 @@
       if (action === 'autofill') autofill();
       if (action === 'clear') clearScores();
       if (action === 'theme') toggleTheme();
-
-      const resultButton = event.target.closest('[data-result-save]');
-      if (resultButton) {
-        saveFantasyResult(resultButton.dataset.resultSave).catch(() => {
-          alert('Nao consegui salvar o resultado agora.');
-        });
-      }
 
       const tab = event.target.closest('[data-tab]');
       if (tab) {

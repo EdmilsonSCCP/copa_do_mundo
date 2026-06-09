@@ -15,10 +15,7 @@ function fantasy_json(array $payload, int $status = 200): void
 
 function fantasy_is_admin(): bool
 {
-    $user = current_user();
-    $email = strtolower((string)($user['email'] ?? ''));
-    return ($user['role'] ?? '') === 'admin'
-        || $email === 'junioredmilson211@gmail.com';
+    return is_admin_user();
 }
 
 function fantasy_body(): array

@@ -21,6 +21,9 @@ function nav_active(string $path, string $currentPath): string
     <nav class="main-nav" aria-label="Navegação principal">
       <a class="<?= 'nav-link' . nav_active('/index.php', $currentPath) ?>" href="/index.php">Copa do Mundo</a>
       <a class="<?= 'nav-link' . nav_active('/spotify.php', $currentPath) ?>" href="/spotify.php">Spotify</a>
+      <?php if ($user && is_admin_user($user)): ?>
+        <a class="<?= 'nav-link' . nav_active('/admin/index.php', $currentPath) ?>" href="/admin/index.php">Admin</a>
+      <?php endif; ?>
     </nav>
 
     <div class="user-area">

@@ -92,6 +92,25 @@ function require_login(): void
     }
 }
 
+function is_admin_user(?array $user = null): bool
+{
+    $user = $user ?? current_user();
+    $email = strtolower((string)($user['email'] ?? ''));
+
+    return ($user['role'] ?? '') === 'admin'
+        || $email === 'junioredmilson211@gmail.com';
+}
+
+function require_admin(): void
+{
+    require_login();
+
+    if (!is_admin_user()) {
+        http_response_code(403);
+        exit('Acesso restrito.');
+    }
+}
+
 //////////////////////////////
 // Auto login via cookie "remember"
 //////////////////////////////

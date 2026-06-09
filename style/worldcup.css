@@ -554,7 +554,7 @@ tr.third td:first-child { border-left: 4px solid var(--warn); }
 
 .fantasy-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 14px;
 }
 
@@ -642,24 +642,41 @@ tr.third td:first-child { border-left: 4px solid var(--warn); }
   align-items: start;
 }
 
-.fantasy-match {
+.fantasy-pick-card {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 52px auto 52px minmax(0, 1fr);
-  gap: 10px;
-  align-items: center;
+  gap: 14px;
 }
 
-.fantasy-admin {
+.pick-teams {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 52px auto 52px minmax(0, 1fr);
-  gap: 10px;
-  align-items: center;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+  align-items: start;
 }
 
-.admin-result-card .btn {
-  margin-top: 12px;
-  width: auto;
-  justify-self: end;
+.pick-teams > div:last-child .team {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.pick-score {
+  width: min(220px, 100%);
+  justify-self: center;
+  display: grid;
+  grid-template-columns: 68px auto 68px;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--bg-soft) 82%, black);
+}
+
+.pick-score span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  text-align: center;
 }
 
 .score-input {
@@ -874,17 +891,13 @@ tr.third td:first-child { border-left: 4px solid var(--warn); }
     grid-template-columns: minmax(0, 1fr) 48px auto 48px minmax(0, 1fr);
   }
 
-  .fantasy-match {
-    grid-template-columns: minmax(0, 1fr) 48px auto 48px minmax(0, 1fr);
+  .pick-teams {
+    grid-template-columns: 1fr;
   }
 
-  .fantasy-admin {
-    grid-template-columns: minmax(0, 1fr) 48px auto 48px minmax(0, 1fr);
-  }
-
-  .admin-result-card .btn {
-    justify-self: stretch;
-    width: 100%;
+  .pick-teams > div:last-child .team {
+    justify-content: flex-start;
+    text-align: left;
   }
 
   .ko-team-line {
