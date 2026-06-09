@@ -110,6 +110,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
 <meta name="color-scheme" content="dark">
 <title>Entrar | Le Group</title>
 <?= recaptcha_script() ?>
+<?= analytics_head() ?>
 <link rel="stylesheet" href="/style/auth.css?v=<?= filemtime(__DIR__ . '/../style/auth.css') ?>">
 </head>
 <body>

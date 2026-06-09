@@ -57,6 +57,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Redefinir senha</title>
+<?= analytics_head() ?>
 <style>
     :root{--bg:#0b0b0c;--card:#121214;--text:#f1f5f9;--muted:#9aa4b2;--input:#1c1d20;--border:#2a2b31;--primary:#000;--primary-hover:#111;--ring:rgba(255,255,255,.06);
           --danger-bg:#2b1212;--danger:#fca5a5}

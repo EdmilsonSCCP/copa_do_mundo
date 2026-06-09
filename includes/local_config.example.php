@@ -9,4 +9,5 @@ return [
     'smtp_password' => 'SENHA_DO_EMAIL',
     'smtp_from_email' => 'edmilson.santos@legroup.com.br',
     'smtp_from_name' => 'Le Group',
+    'google_analytics_id' => 'G-XXXXXXXXXX',
 ];

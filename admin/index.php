@@ -178,6 +178,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8') ?> | Le Group</title>
+  <?= analytics_head() ?>
   <link rel="stylesheet" href="/style/site.css?v=<?= filemtime(__DIR__ . '/../style/site.css') ?>">
   <link rel="stylesheet" href="/style/admin.css?v=<?= filemtime(__DIR__ . '/../style/admin.css') ?>">
 </head>

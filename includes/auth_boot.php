@@ -38,7 +38,28 @@ define('SMTP_USERNAME', getenv('SMTP_USERNAME') ?: ($localConfig['smtp_username'
 define('SMTP_PASSWORD', getenv('SMTP_PASSWORD') ?: ($localConfig['smtp_password'] ?? ''));
 define('SMTP_FROM_EMAIL', getenv('SMTP_FROM_EMAIL') ?: ($localConfig['smtp_from_email'] ?? SMTP_USERNAME));
 define('SMTP_FROM_NAME', getenv('SMTP_FROM_NAME') ?: ($localConfig['smtp_from_name'] ?? 'Le Group'));
+define('GOOGLE_ANALYTICS_ID', getenv('GOOGLE_ANALYTICS_ID') ?: ($localConfig['google_analytics_id'] ?? ''));
 const PASSWORD_RESET_DEBUG_LINK = false;
+
+function analytics_head(): string
+{
+    $tagId = trim((string)GOOGLE_ANALYTICS_ID);
+    if ($tagId === '') {
+        return '';
+    }
+
+    $safeTagId = htmlspecialchars($tagId, ENT_QUOTES, 'UTF-8');
+
+    return <<<HTML
+<script async src="https://www.googletagmanager.com/gtag/js?id={$safeTagId}"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', '{$safeTagId}');
+</script>
+HTML;
+}
 
 function is_https_request(): bool
 {

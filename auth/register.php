@@ -68,6 +68,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Criar conta | Le Group</title>
 <?= recaptcha_script() ?>
+<?= analytics_head() ?>
 <style>
     :root {
         --bg: #05080f;
