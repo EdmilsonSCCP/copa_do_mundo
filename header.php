@@ -10,7 +10,7 @@ function nav_active(string $path, string $currentPath): string
 ?>
 <header class="site-header">
   <div class="site-header__inner">
-    <a class="brand" href="/dashboard.php" aria-label="Ir para o inicio">
+    <a class="brand" href="<?= $user ? '/dashboard.php' : '/index.php' ?>" aria-label="Ir para o início">
       <img src="/assets/logo.png" alt="Le Group" class="brand__logo">
       <span>
         <strong>Le Group</strong>
@@ -24,11 +24,14 @@ function nav_active(string $path, string $currentPath): string
       <span></span>
     </button>
 
-    <nav class="main-nav" aria-label="Navegacao principal" data-main-nav>
-      <a class="<?= 'nav-link' . nav_active('/dashboard.php', $currentPath) ?>" href="/dashboard.php">Inicio</a>
-      <a class="<?= 'nav-link' . nav_active('/index.php', $currentPath) ?>" href="/index.php">Copa do Mundo</a>
+    <nav class="main-nav" aria-label="Navegação principal" data-main-nav>
+      <?php if ($user): ?>
+        <a class="<?= 'nav-link' . nav_active('/dashboard.php', $currentPath) ?>" href="/dashboard.php">Início</a>
+      <?php else: ?>
+        <a class="<?= 'nav-link' . nav_active('/index.php', $currentPath) ?>" href="/index.php">Início</a>
+      <?php endif; ?>
+      <a class="<?= 'nav-link' . nav_active('/copa.php', $currentPath) ?>" href="/copa.php">Copa do Mundo</a>
       <a class="<?= 'nav-link' . nav_active('/spotify.php', $currentPath) ?>" href="/spotify.php">Spotify</a>
-      <a class="<?= 'nav-link' . nav_active('/spotify-history.php', $currentPath) ?>" href="/spotify-history.php">Historico</a>
       <?php if ($user && is_admin_user($user)): ?>
         <a class="<?= 'nav-link' . nav_active('/admin/index.php', $currentPath) ?>" href="/admin/index.php">Admin</a>
       <?php endif; ?>
@@ -36,7 +39,7 @@ function nav_active(string $path, string $currentPath): string
 
     <div class="user-area">
       <?php if ($user): ?>
-        <span class="hello">Ola, <strong><?= htmlspecialchars($user['nome'], ENT_QUOTES, 'UTF-8') ?></strong></span>
+        <span class="hello">Olá, <strong><?= htmlspecialchars($user['nome'], ENT_QUOTES, 'UTF-8') ?></strong></span>
         <a class="account-link" href="/account/index.php">Minha conta</a>
         <a class="account-link" href="/auth/logout.php">Sair</a>
       <?php else: ?>

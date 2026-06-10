@@ -2,7 +2,7 @@
 declare(strict_types=1);
 require __DIR__ . '/../includes/auth_boot.php';
 
-if (current_user()) { header('Location:/index.php'); exit; }
+if (current_user()) { header('Location:/dashboard.php'); exit; }
 
 $erro=''; $ok='';
 $token = $_GET['token'] ?? '';

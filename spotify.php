@@ -149,11 +149,12 @@ function movement_class(array $artist): string
       <span>Última atualização</span>
       <strong><?= htmlspecialchars($lastUpdated, ENT_QUOTES, 'UTF-8') ?></strong>
     </article>
-    <?php if ($isAdmin): ?>
-      <a class="refresh-button" href="/spotify.php?refresh=1">Atualizar agora</a>
-    <?php else: ?>
-      <a class="refresh-button muted" href="/spotify-history.php">Ver historico</a>
-    <?php endif; ?>
+    <div class="summary-actions">
+      <a class="refresh-button muted" href="/spotify-history.php">Ver histórico</a>
+      <?php if ($isAdmin): ?>
+        <a class="refresh-button" href="/spotify.php?refresh=1">Atualizar agora</a>
+      <?php endif; ?>
+    </div>
   </section>
 
   <?php if ($ranking): ?>

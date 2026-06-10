@@ -152,6 +152,19 @@ body {
   filter: brightness(1.05);
 }
 
+.summary-actions {
+  display: flex;
+  gap: 10px;
+  align-items: stretch;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+.refresh-button.muted {
+  color: var(--text);
+  background: color-mix(in srgb, var(--panel) 86%, transparent);
+}
+
 .podium {
   display: grid;
   grid-template-columns: 1.18fr .91fr .91fr;
@@ -376,6 +389,11 @@ body {
   .podium,
   .chart-summary {
     grid-template-columns: 1fr;
+  }
+
+  .summary-actions,
+  .refresh-button {
+    width: 100%;
   }
 
   .leader-card {

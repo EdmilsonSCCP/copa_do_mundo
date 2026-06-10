@@ -7,8 +7,7 @@
     <div class="footer-meta">
       <span>Atualizado em <?= date('d/m/Y \à\s H\hi\s') ?></span>
       <a href="/spotify.php">Ranking Spotify</a>
-      <a href="/spotify-history.php">Histórico Spotify</a>
-      <a href="/index.php#top">Voltar ao topo</a>
+      <a href="/copa.php#top">Voltar ao topo</a>
     </div>
   </div>
 </footer>

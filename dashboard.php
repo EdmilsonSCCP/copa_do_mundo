@@ -129,8 +129,8 @@ $firstName = explode(' ', trim((string)($user['nome'] ?? '')))[0] ?: 'jogador';
       <p>Acompanhe seus palpites, os proximos jogos da Copa e o Top Spotify sem precisar procurar por tudo no menu.</p>
     </div>
     <div class="dashboard-actions">
-      <a class="dash-btn primary" href="/index.php#fantasy">Ir para o bolão</a>
-      <a class="dash-btn" href="/index.php#matches">Abrir simulador</a>
+      <a class="dash-btn primary" href="/copa.php#fantasy">Ir para o bolão</a>
+      <a class="dash-btn" href="/copa.php#matches">Abrir simulador</a>
       <a class="dash-btn" href="/spotify.php">Ver Spotify</a>
     </div>
   </section>
@@ -151,7 +151,7 @@ $firstName = explode(' ', trim((string)($user['nome'] ?? '')))[0] ?: 'jogador';
       <div class="next-list">
         <?php foreach ($nextMatches as $match): ?>
           <?php $prediction = $userPredictions[(int)$match['id']] ?? null; ?>
-          <a href="/index.php#fantasy" class="next-match">
+          <a href="/copa.php#fantasy" class="next-match">
             <span>Grupo <?= dashboard_h($match['group']) ?> - <?= dashboard_h($match['date']) ?> <?= dashboard_h($match['time']) ?></span>
             <strong><?= dashboard_h($match['team1']) ?> x <?= dashboard_h($match['team2']) ?></strong>
             <small><?= $prediction ? 'Palpite feito: ' . $prediction[0] . ' x ' . $prediction[1] : 'Palpite pendente' ?></small>
