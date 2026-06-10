@@ -55,12 +55,15 @@ function fantasy_match_time(array $match): DateTimeImmutable
 
 function fantasy_results(PDO $db): array
 {
-    $rows = $db->query('SELECT match_id, result_a, result_b FROM fantasy_results')->fetchAll();
+    $rows = $db->query('SELECT match_id, result_a, result_b, source, status, synced_at FROM fantasy_results')->fetchAll();
     $results = [];
     foreach ($rows as $row) {
         $results[(int)$row['match_id']] = [
             'a' => (int)$row['result_a'],
             'b' => (int)$row['result_b'],
+            'source' => (string)($row['source'] ?? 'manual'),
+            'status' => $row['status'] ?? null,
+            'synced_at' => $row['synced_at'] ?? null,
         ];
     }
     return $results;
@@ -276,9 +279,9 @@ try {
         }
 
         $stmt = $db->prepare(
-            'INSERT INTO fantasy_results (match_id, result_a, result_b)
-             VALUES (:match_id, :result_a, :result_b)
-             ON DUPLICATE KEY UPDATE result_a = VALUES(result_a), result_b = VALUES(result_b), updated_at = CURRENT_TIMESTAMP'
+            'INSERT INTO fantasy_results (match_id, result_a, result_b, source, status, synced_at)
+             VALUES (:match_id, :result_a, :result_b, "manual", "manual", NOW())
+             ON DUPLICATE KEY UPDATE result_a = VALUES(result_a), result_b = VALUES(result_b), source = "manual", status = "manual", synced_at = NOW(), updated_at = CURRENT_TIMESTAMP'
         );
         $stmt->execute([
             ':match_id' => $matchId,

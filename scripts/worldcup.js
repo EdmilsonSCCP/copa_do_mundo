@@ -4,6 +4,8 @@
   const DATA_URL = '/data/world-cup-2026.json';
   const SCORES_API = '/api/simulator.php';
   const FANTASY_API = '/api/fantasy.php';
+  const LIVE_SCORES_API = '/api/live_scores.php';
+  const LIVE_SCORE_POLL_MS = 180000;
 
   const TEAM_META = {
     franca: ['FR', 'Europa', 1],
@@ -70,6 +72,7 @@
   let scores = loadScores();
   let remoteScoresReady = false;
   let saveScoresTimer = null;
+  let liveScoresTimer = null;
   let fantasyState = {
     is_admin: false,
     next_matches: [],
@@ -231,6 +234,41 @@
 
   function matchStarted(match) {
     return matchDateTime(match).getTime() <= Date.now();
+  }
+
+  function hasLiveScoreWindow() {
+    if (!DATA?.matches?.length) return false;
+    const now = Date.now();
+    return DATA.matches.some((match) => {
+      const start = matchDateTime(match).getTime();
+      return now >= start - (15 * 60 * 1000) && now <= start + (3 * 60 * 60 * 1000);
+    });
+  }
+
+  async function syncLiveScores(force = false) {
+    if (!force && !hasLiveScoreWindow()) return;
+
+    try {
+      const response = await fetch(`${LIVE_SCORES_API}${force ? '?force=1' : ''}`, {
+        cache: 'no-store',
+        credentials: 'same-origin'
+      });
+      if (!response.ok) return;
+
+      const data = await response.json();
+      if (!data.ok || !data.updated) return;
+
+      await loadFantasy();
+      renderAll();
+    } catch {
+      // A API ao vivo e apenas um reforco; o Admin manual continua funcionando.
+    }
+  }
+
+  function scheduleLiveScoreSync() {
+    window.clearInterval(liveScoresTimer);
+    syncLiveScores();
+    liveScoresTimer = window.setInterval(syncLiveScores, LIVE_SCORE_POLL_MS);
   }
 
   function officialResult(match) {
@@ -892,6 +930,7 @@
     });
 
     renderAll();
+    scheduleLiveScoreSync();
     if (window.location.hash) {
       activateTab(window.location.hash.slice(1));
     }

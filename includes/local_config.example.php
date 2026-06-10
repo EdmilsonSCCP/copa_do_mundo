@@ -14,4 +14,7 @@ return [
     'smtp_from_email' => 'edmilson.santos@legroup.com.br',
     'smtp_from_name' => 'Le Group',
     'google_analytics_id' => 'G-XXXXXXXXXX',
+    'api_football_key' => 'SUA_CHAVE_API_FOOTBALL',
+    'api_football_base_url' => 'https://v3.football.api-sports.io',
+    'api_football_cache_seconds' => 180,
 ];

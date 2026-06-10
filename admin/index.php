@@ -32,12 +32,15 @@ function admin_match_map(array $matches): array
 
 function admin_results(PDO $db): array
 {
-    $rows = $db->query('SELECT match_id, result_a, result_b FROM fantasy_results')->fetchAll();
+    $rows = $db->query('SELECT match_id, result_a, result_b, source, status, synced_at FROM fantasy_results')->fetchAll();
     $results = [];
     foreach ($rows as $row) {
         $results[(int)$row['match_id']] = [
             'a' => (int)$row['result_a'],
             'b' => (int)$row['result_b'],
+            'source' => (string)($row['source'] ?? 'manual'),
+            'status' => $row['status'] ?? null,
+            'synced_at' => $row['synced_at'] ?? null,
         ];
     }
     return $results;
@@ -101,9 +104,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $flashError = 'Placar invalido.';
         } else {
             $stmt = $db->prepare(
-                'INSERT INTO fantasy_results (match_id, result_a, result_b)
-                 VALUES (:match_id, :result_a, :result_b)
-                 ON DUPLICATE KEY UPDATE result_a = VALUES(result_a), result_b = VALUES(result_b), updated_at = CURRENT_TIMESTAMP'
+                'INSERT INTO fantasy_results (match_id, result_a, result_b, source, status, synced_at)
+                 VALUES (:match_id, :result_a, :result_b, "manual", "manual", NOW())
+                 ON DUPLICATE KEY UPDATE result_a = VALUES(result_a), result_b = VALUES(result_b), source = "manual", status = "manual", synced_at = NOW(), updated_at = CURRENT_TIMESTAMP'
             );
             $stmt->execute([
                 ':match_id' => $matchId,
@@ -171,6 +174,11 @@ $systemStatus = [
         'label' => 'E-mail',
         'ok' => SMTP_HOST !== '' && SMTP_USERNAME !== '' && SMTP_PASSWORD !== '',
         'detail' => SMTP_HOST !== '' ? SMTP_HOST : 'Não configurado',
+    ],
+    [
+        'label' => 'Gols ao vivo',
+        'ok' => API_FOOTBALL_KEY !== '',
+        'detail' => API_FOOTBALL_KEY !== '' ? 'API-Football configurada' : 'Chave pendente',
     ],
     [
         'label' => 'Spotify',
@@ -252,6 +260,7 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
         <p class="eyebrow">Copa do Mundo</p>
         <h2>Placares oficiais</h2>
       </div>
+      <button class="admin-btn" type="button" data-live-sync>Sincronizar gols ao vivo</button>
     </div>
 
     <form class="admin-filters" method="get" action="">
@@ -296,6 +305,15 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
             <span>Grupo <?= htmlspecialchars((string)$match['group'], ENT_QUOTES, 'UTF-8') ?></span>
             <span><?= htmlspecialchars((string)$match['date'], ENT_QUOTES, 'UTF-8') ?> - <?= htmlspecialchars((string)$match['time'], ENT_QUOTES, 'UTF-8') ?></span>
           </div>
+
+          <?php if ($result): ?>
+            <div class="result-source <?= ($result['source'] ?? '') === 'api-football' ? 'is-live' : '' ?>">
+              <?= ($result['source'] ?? '') === 'api-football' ? 'API-Football' : 'Manual' ?>
+              <?php if (!empty($result['status'])): ?>
+                <span><?= htmlspecialchars((string)$result['status'], ENT_QUOTES, 'UTF-8') ?></span>
+              <?php endif; ?>
+            </div>
+          <?php endif; ?>
 
           <div class="teams">
             <strong><?= htmlspecialchars((string)$match['team1'], ENT_QUOTES, 'UTF-8') ?></strong>
@@ -372,5 +390,22 @@ $csrf = htmlspecialchars(csrf_token(), ENT_QUOTES, 'UTF-8');
 </main>
 
 <?php include __DIR__ . '/../footer.php'; ?>
+<script>
+  document.querySelector('[data-live-sync]')?.addEventListener('click', async (event) => {
+    const button = event.currentTarget;
+    button.disabled = true;
+    button.textContent = 'Sincronizando...';
+    try {
+      const response = await fetch('/api/live_scores.php?force=1', { cache: 'no-store', credentials: 'same-origin' });
+      const data = await response.json();
+      if (!data.ok) throw new Error(data.error || 'Falha');
+      window.location.reload();
+    } catch {
+      alert('Nao consegui sincronizar os gols agora.');
+      button.disabled = false;
+      button.textContent = 'Sincronizar gols ao vivo';
+    }
+  });
+</script>
 </body>
 </html>

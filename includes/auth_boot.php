@@ -35,6 +35,9 @@ define('SMTP_PASSWORD', getenv('SMTP_PASSWORD') ?: ($localConfig['smtp_password'
 define('SMTP_FROM_EMAIL', getenv('SMTP_FROM_EMAIL') ?: ($localConfig['smtp_from_email'] ?? SMTP_USERNAME));
 define('SMTP_FROM_NAME', getenv('SMTP_FROM_NAME') ?: ($localConfig['smtp_from_name'] ?? 'Le Group'));
 define('GOOGLE_ANALYTICS_ID', getenv('GOOGLE_ANALYTICS_ID') ?: ($localConfig['google_analytics_id'] ?? ''));
+define('API_FOOTBALL_KEY', getenv('API_FOOTBALL_KEY') ?: ($localConfig['api_football_key'] ?? ''));
+define('API_FOOTBALL_BASE_URL', rtrim((string)(getenv('API_FOOTBALL_BASE_URL') ?: ($localConfig['api_football_base_url'] ?? 'https://v3.football.api-sports.io')), '/'));
+define('API_FOOTBALL_CACHE_SECONDS', max(60, (int)(getenv('API_FOOTBALL_CACHE_SECONDS') ?: ($localConfig['api_football_cache_seconds'] ?? 180))));
 const PASSWORD_RESET_DEBUG_LINK = false;
 
 function analytics_head(): string

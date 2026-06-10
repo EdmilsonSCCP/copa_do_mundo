@@ -46,8 +46,14 @@ function ensure_fantasy_schema(PDO $db): void
             match_id INT PRIMARY KEY,
             result_a INT NOT NULL,
             result_b INT NOT NULL,
+            source VARCHAR(40) NOT NULL DEFAULT 'manual',
+            status VARCHAR(20) NULL,
+            synced_at DATETIME NULL,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4",
+        "ALTER TABLE fantasy_results ADD COLUMN IF NOT EXISTS source VARCHAR(40) NOT NULL DEFAULT 'manual'",
+        "ALTER TABLE fantasy_results ADD COLUMN IF NOT EXISTS status VARCHAR(20) NULL",
+        "ALTER TABLE fantasy_results ADD COLUMN IF NOT EXISTS synced_at DATETIME NULL",
         "CREATE TABLE IF NOT EXISTS fantasy_predictions (
             id INT AUTO_INCREMENT PRIMARY KEY,
             user_id INT NOT NULL,
