@@ -241,7 +241,7 @@
     const now = Date.now();
     return DATA.matches.some((match) => {
       const start = matchDateTime(match).getTime();
-      return now >= start - (10 * 60 * 1000) && now <= start + (140 * 60 * 1000);
+      return now >= start - (10 * 60 * 1000) && now <= start + (8 * 60 * 60 * 1000);
     });
   }
 

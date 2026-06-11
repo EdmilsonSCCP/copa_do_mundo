@@ -18,9 +18,10 @@ function live_data_path(): string
     return dirname(__DIR__) . '/data/world-cup-2026.json';
 }
 
-function live_cache_path(): string
+function live_cache_path(string $key): string
 {
-    return dirname(__DIR__) . '/data/live-score-cache.json';
+    $safeKey = preg_replace('/[^a-z0-9_-]+/i', '-', $key) ?: 'live';
+    return dirname(__DIR__) . "/data/live-score-cache-{$safeKey}.json";
 }
 
 function live_matches(): array
@@ -121,15 +122,22 @@ function live_pair_matches(array $localMatch, string $apiHome, string $apiAway):
     return null;
 }
 
-function live_fetch_fixtures(bool $force = false): array
+function live_match_time(array $match): DateTimeImmutable
 {
-    $cachePath = live_cache_path();
+    $date = DateTimeImmutable::createFromFormat('d/m/Y H:i', $match['date'] . ' ' . $match['time'], app_timezone());
+    return $date ?: new DateTimeImmutable('2999-01-01', app_timezone());
+}
+
+function live_api_request(string $query, string $cacheKey, bool $force = false, ?int $ttl = null): array
+{
+    $ttl = $ttl ?? API_FOOTBALL_CACHE_SECONDS;
+    $cachePath = live_cache_path($cacheKey);
     $cacheAge = is_file($cachePath) ? (time() - filemtime($cachePath)) : PHP_INT_MAX;
 
-    if (!$force && $cacheAge < API_FOOTBALL_CACHE_SECONDS) {
+    if (!$force && $cacheAge < $ttl) {
         $cached = json_decode((string)file_get_contents($cachePath), true);
         if (is_array($cached)) {
-            return ['source' => 'cache', 'body' => $cached];
+            return ['source' => "cache:{$cacheKey}", 'body' => $cached];
         }
     }
 
@@ -145,7 +153,7 @@ function live_fetch_fixtures(bool $force = false): array
         ],
     ]);
 
-    $url = API_FOOTBALL_BASE_URL . '/fixtures?live=all';
+    $url = API_FOOTBALL_BASE_URL . $query;
     $raw = @file_get_contents($url, false, $context);
     $body = json_decode((string)$raw, true);
     if (!is_array($body)) {
@@ -153,7 +161,51 @@ function live_fetch_fixtures(bool $force = false): array
     }
 
     @file_put_contents($cachePath, json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES));
-    return ['source' => 'api-football', 'body' => $body];
+    return ['source' => "api-football:{$cacheKey}", 'body' => $body];
+}
+
+function live_fetch_fixtures(bool $force = false): array
+{
+    return live_api_request('/fixtures?live=all', 'live', $force);
+}
+
+function live_recovery_dates(array $matches): array
+{
+    $now = app_now();
+    $dates = [];
+
+    foreach ($matches as $match) {
+        $start = live_match_time($match);
+        if ($now >= $start->modify('+95 minutes') && $now <= $start->modify('+8 hours')) {
+            $dates[$start->format('Y-m-d')] = true;
+        }
+    }
+
+    return array_keys($dates);
+}
+
+function live_should_fetch_live(array $matches): bool
+{
+    $now = app_now();
+
+    foreach ($matches as $match) {
+        $start = live_match_time($match);
+        if ($now >= $start->modify('-10 minutes') && $now <= $start->modify('+160 minutes')) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+function live_fetch_date_fixtures(array $dates, bool $force = false): array
+{
+    $responses = [];
+    foreach ($dates as $date) {
+        $responses[] = live_api_request('/fixtures?date=' . rawurlencode($date), "date-{$date}", $force, 600);
+    }
+
+    return $responses;
 }
 
 function live_upsert_result(PDO $db, int $matchId, int $a, int $b, string $status): void
@@ -181,53 +233,68 @@ try {
     ensure_fantasy_schema($db);
 
     $force = ($_GET['force'] ?? '') === '1';
-    $fixtures = live_fetch_fixtures($force);
     $matches = live_matches();
+    $responses = [];
+    if ($force || live_should_fetch_live($matches)) {
+        $responses[] = live_fetch_fixtures($force);
+    }
+
+    $recoveryDates = live_recovery_dates($matches);
+    foreach (live_fetch_date_fixtures($recoveryDates, $force) as $dateResponse) {
+        $responses[] = $dateResponse;
+    }
+
     $updated = [];
+    $sources = [];
 
-    foreach (($fixtures['body']['response'] ?? []) as $fixture) {
-        if (!is_array($fixture)) {
-            continue;
-        }
+    foreach ($responses as $fixtures) {
+        $sources[] = $fixtures['source'];
 
-        $apiHome = (string)($fixture['teams']['home']['name'] ?? '');
-        $apiAway = (string)($fixture['teams']['away']['name'] ?? '');
-        $homeGoals = $fixture['goals']['home'] ?? null;
-        $awayGoals = $fixture['goals']['away'] ?? null;
-        $status = (string)($fixture['fixture']['status']['short'] ?? 'LIVE');
-
-        if ($apiHome === '' || $apiAway === '' || $homeGoals === null || $awayGoals === null) {
-            continue;
-        }
-
-        foreach ($matches as $match) {
-            $pair = live_pair_matches($match, $apiHome, $apiAway);
-            if (!$pair) {
+        foreach (($fixtures['body']['response'] ?? []) as $fixture) {
+            if (!is_array($fixture)) {
                 continue;
             }
 
-            $a = (int)($pair['reversed'] ? $awayGoals : $homeGoals);
-            $b = (int)($pair['reversed'] ? $homeGoals : $awayGoals);
-            $matchId = (int)$match['id'];
-            live_upsert_result($db, $matchId, $a, $b, $status);
-            $updated[] = [
-                'match_id' => $matchId,
-                'team1' => $match['team1'] ?? '',
-                'team2' => $match['team2'] ?? '',
-                'a' => $a,
-                'b' => $b,
-                'status' => $status,
-            ];
-            break;
+            $apiHome = (string)($fixture['teams']['home']['name'] ?? '');
+            $apiAway = (string)($fixture['teams']['away']['name'] ?? '');
+            $homeGoals = $fixture['goals']['home'] ?? null;
+            $awayGoals = $fixture['goals']['away'] ?? null;
+            $status = (string)($fixture['fixture']['status']['short'] ?? 'LIVE');
+
+            if ($apiHome === '' || $apiAway === '' || $homeGoals === null || $awayGoals === null) {
+                continue;
+            }
+
+            foreach ($matches as $match) {
+                $pair = live_pair_matches($match, $apiHome, $apiAway);
+                if (!$pair) {
+                    continue;
+                }
+
+                $a = (int)($pair['reversed'] ? $awayGoals : $homeGoals);
+                $b = (int)($pair['reversed'] ? $homeGoals : $awayGoals);
+                $matchId = (int)$match['id'];
+                live_upsert_result($db, $matchId, $a, $b, $status);
+                $updated[$matchId] = [
+                    'match_id' => $matchId,
+                    'team1' => $match['team1'] ?? '',
+                    'team2' => $match['team2'] ?? '',
+                    'a' => $a,
+                    'b' => $b,
+                    'status' => $status,
+                ];
+                break;
+            }
         }
     }
 
     live_json([
         'ok' => true,
-        'source' => $fixtures['source'],
+        'source' => implode(',', array_unique($sources)),
         'cache_seconds' => API_FOOTBALL_CACHE_SECONDS,
         'updated' => count($updated),
-        'matches' => $updated,
+        'recovery_dates' => $recoveryDates,
+        'matches' => array_values($updated),
     ]);
 } catch (Throwable $e) {
     error_log('Live score sync failed: ' . $e->getMessage());
