@@ -16,5 +16,5 @@ return [
     'google_analytics_id' => 'G-XXXXXXXXXX',
     'api_football_key' => 'SUA_CHAVE_API_FOOTBALL',
     'api_football_base_url' => 'https://v3.football.api-sports.io',
-    'api_football_cache_seconds' => 180,
+    'api_football_cache_seconds' => 300,
 ];

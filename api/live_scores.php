@@ -161,7 +161,13 @@ function live_upsert_result(PDO $db, int $matchId, int $a, int $b, string $statu
     $stmt = $db->prepare(
         'INSERT INTO fantasy_results (match_id, result_a, result_b, source, status, synced_at)
          VALUES (:match_id, :result_a, :result_b, "api-football", :status, NOW())
-         ON DUPLICATE KEY UPDATE result_a = VALUES(result_a), result_b = VALUES(result_b), source = "api-football", status = VALUES(status), synced_at = NOW(), updated_at = CURRENT_TIMESTAMP'
+         ON DUPLICATE KEY UPDATE
+            result_a = IF(source = "manual" AND status = "manual", result_a, VALUES(result_a)),
+            result_b = IF(source = "manual" AND status = "manual", result_b, VALUES(result_b)),
+            source = IF(source = "manual" AND status = "manual", source, "api-football"),
+            status = IF(source = "manual" AND status = "manual", status, VALUES(status)),
+            synced_at = IF(source = "manual" AND status = "manual", synced_at, NOW()),
+            updated_at = CURRENT_TIMESTAMP'
     );
     $stmt->execute([
         ':match_id' => $matchId,

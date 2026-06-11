@@ -22,6 +22,7 @@ function dashboard_match_time(array $match): DateTimeImmutable
 $worldCup = json_decode((string)file_get_contents(__DIR__ . '/data/world-cup-2026.json'), true);
 $matches = is_array($worldCup['matches'] ?? null) ? $worldCup['matches'] : [];
 $officialResults = [];
+$finalResults = [];
 $userPredictions = [];
 $leaderboard = [];
 $stats = [
@@ -34,8 +35,15 @@ $stats = [
 try {
     ensure_all_schema($db);
 
-    foreach ($db->query('SELECT match_id, result_a, result_b FROM fantasy_results')->fetchAll() as $row) {
-        $officialResults[(int)$row['match_id']] = [(int)$row['result_a'], (int)$row['result_b']];
+    foreach ($db->query('SELECT match_id, result_a, result_b, source, status FROM fantasy_results')->fetchAll() as $row) {
+        $matchId = (int)$row['match_id'];
+        $source = (string)($row['source'] ?? 'manual');
+        $status = strtoupper((string)($row['status'] ?? 'manual'));
+        $result = [(int)$row['result_a'], (int)$row['result_b']];
+        $officialResults[$matchId] = $result;
+        if ($source === 'manual' || in_array($status, ['FT', 'AET', 'PEN'], true)) {
+            $finalResults[$matchId] = $result;
+        }
     }
 
     $stmt = $db->prepare('SELECT match_id, pred_a, pred_b FROM fantasy_predictions WHERE user_id = :id');
@@ -45,7 +53,7 @@ try {
     }
 
     $stats['predictions'] = count($userPredictions);
-    $stats['official_results'] = count($officialResults);
+    $stats['official_results'] = count($finalResults);
 
     $stmt = $db->prepare('SELECT COUNT(*) FROM simuladores WHERE user_id = :id');
     $stmt->execute([':id' => $userId]);
@@ -66,11 +74,11 @@ try {
     foreach ($predictions as $prediction) {
         $uid = (int)$prediction['user_id'];
         $matchId = (int)$prediction['match_id'];
-        if (!isset($scoreMap[$uid], $officialResults[$matchId])) {
+        if (!isset($scoreMap[$uid], $finalResults[$matchId])) {
             continue;
         }
 
-        [$ra, $rb] = $officialResults[$matchId];
+        [$ra, $rb] = $finalResults[$matchId];
         $pa = (int)$prediction['pred_a'];
         $pb = (int)$prediction['pred_b'];
         if ($pa === $ra && $pb === $rb) {
@@ -97,7 +105,18 @@ $futureMatches = array_values(array_filter($matches, static fn(array $match): bo
 usort($futureMatches, static fn(array $a, array $b): int => dashboard_match_time($a) <=> dashboard_match_time($b));
 $nextMatches = array_slice($futureMatches, 0, 4);
 
-foreach ($nextMatches as $match) {
+$bettableMatches = array_values(array_filter($matches, static fn(array $match): bool =>
+    dashboard_match_time($match) > $now
+    && !isset($finalResults[(int)$match['id']])
+    && !isset($officialResults[(int)$match['id']])
+));
+usort($bettableMatches, static fn(array $a, array $b): int => dashboard_match_time($a) <=> dashboard_match_time($b));
+$nextBetDate = $bettableMatches[0]['date'] ?? null;
+$nextBetMatches = $nextBetDate
+    ? array_values(array_filter($bettableMatches, static fn(array $match): bool => $match['date'] === $nextBetDate))
+    : [];
+
+foreach ($nextBetMatches as $match) {
     if (!isset($userPredictions[(int)$match['id']])) {
         $stats['pending_predictions']++;
     }

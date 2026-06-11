@@ -69,6 +69,23 @@ function fantasy_results(PDO $db): array
     return $results;
 }
 
+function fantasy_result_is_final(?array $result): bool
+{
+    if (!$result) {
+        return false;
+    }
+
+    $source = (string)($result['source'] ?? 'manual');
+    $status = strtoupper((string)($result['status'] ?? 'manual'));
+
+    return $source === 'manual' || in_array($status, ['FT', 'AET', 'PEN'], true);
+}
+
+function fantasy_final_results(array $results): array
+{
+    return array_filter($results, static fn(?array $result): bool => fantasy_result_is_final($result));
+}
+
 function fantasy_user_predictions(PDO $db, int $userId): array
 {
     $stmt = $db->prepare('SELECT match_id, pred_a, pred_b FROM fantasy_predictions WHERE user_id = :user_id');
@@ -85,7 +102,7 @@ function fantasy_user_predictions(PDO $db, int $userId): array
 
 function fantasy_points(array $prediction, ?array $result): array
 {
-    if (!$result) {
+    if (!fantasy_result_is_final($result)) {
         return ['points' => 0, 'type' => 'pending'];
     }
 
@@ -149,7 +166,8 @@ function fantasy_leaderboard(PDO $db, array $results): array
 
 function fantasy_history(PDO $db, array $matches, array $results): array
 {
-    if (!$results) {
+    $finalResults = fantasy_final_results($results);
+    if (!$finalResults) {
         return [];
     }
 
@@ -164,12 +182,12 @@ function fantasy_history(PDO $db, array $matches, array $results): array
 
     foreach ($stmt->fetchAll() as $row) {
         $matchId = (int)$row['match_id'];
-        if (!isset($results[$matchId], $matchMap[$matchId])) {
+        if (!isset($finalResults[$matchId], $matchMap[$matchId])) {
             continue;
         }
 
         $prediction = ['a' => (int)$row['pred_a'], 'b' => (int)$row['pred_b']];
-        $scored = fantasy_points($prediction, $results[$matchId]);
+        $scored = fantasy_points($prediction, $finalResults[$matchId]);
         $match = $matchMap[$matchId];
         $history[] = [
             'user' => $row['nome'],
@@ -179,7 +197,7 @@ function fantasy_history(PDO $db, array $matches, array $results): array
             'team1' => $match['team1'] ?? '',
             'team2' => $match['team2'] ?? '',
             'prediction' => $prediction,
-            'result' => $results[$matchId],
+            'result' => $finalResults[$matchId],
             'points' => $scored['points'],
             'type' => $scored['type'],
         ];
@@ -190,8 +208,10 @@ function fantasy_history(PDO $db, array $matches, array $results): array
 
 function fantasy_next_matches(array $matches, array $results): array
 {
+    $now = app_now();
     $unresolved = array_values(array_filter($matches, static fn(array $match): bool =>
-        !isset($results[(int)$match['id']])
+        !fantasy_result_is_final($results[(int)$match['id']] ?? null)
+        && fantasy_match_time($match) > $now
     ));
 
     if (!$unresolved) {
@@ -216,6 +236,7 @@ try {
     $matches = fantasy_matches(dirname(__DIR__));
     $matchMap = fantasy_match_map($matches);
     $results = fantasy_results($db);
+    $finalResults = fantasy_final_results($results);
 
     if ($_SERVER['REQUEST_METHOD'] === 'GET') {
         fantasy_json([
@@ -225,7 +246,7 @@ try {
             'matches' => $matches,
             'predictions' => fantasy_user_predictions($db, $userId),
             'results' => $results,
-            'leaderboard' => fantasy_leaderboard($db, $results),
+            'leaderboard' => fantasy_leaderboard($db, $finalResults),
             'history' => fantasy_history($db, $matches, $results),
         ]);
     }

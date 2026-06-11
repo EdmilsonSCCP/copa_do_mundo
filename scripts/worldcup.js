@@ -5,7 +5,7 @@
   const SCORES_API = '/api/simulator.php';
   const FANTASY_API = '/api/fantasy.php';
   const LIVE_SCORES_API = '/api/live_scores.php';
-  const LIVE_SCORE_POLL_MS = 180000;
+  const LIVE_SCORE_POLL_MS = 300000;
 
   const TEAM_META = {
     franca: ['FR', 'Europa', 1],
@@ -241,7 +241,7 @@
     const now = Date.now();
     return DATA.matches.some((match) => {
       const start = matchDateTime(match).getTime();
-      return now >= start - (15 * 60 * 1000) && now <= start + (3 * 60 * 60 * 1000);
+      return now >= start - (10 * 60 * 1000) && now <= start + (140 * 60 * 1000);
     });
   }
 
@@ -273,6 +273,17 @@
 
   function officialResult(match) {
     return fantasyState.results?.[match.id] || null;
+  }
+
+  function resultIsFinal(result) {
+    if (!result) return false;
+    const source = String(result.source || 'manual');
+    const status = String(result.status || 'manual').toUpperCase();
+    return source === 'manual' || ['FT', 'AET', 'PEN'].includes(status);
+  }
+
+  function resultIsLive(result) {
+    return result && !resultIsFinal(result);
   }
 
   function effectiveScore(match) {
@@ -486,7 +497,7 @@
       const locked = Boolean(result) || matchStarted(match);
       const score = effectiveScore(match);
       const disabled = locked ? 'disabled' : '';
-      const lockLabel = result ? 'Resultado oficial' : matchStarted(match) ? 'Jogo iniciado' : '';
+      const lockLabel = resultIsLive(result) ? 'Ao vivo' : resultIsFinal(result) ? 'Resultado final' : matchStarted(match) ? 'Jogo iniciado' : '';
 
       return `<article class="match-card">
         <div class="card-meta"><span>Grupo ${match.group} - ${match.date} - ${match.time}</span><span>${lockLabel || `Jogo ${match.id}`}</span></div>
@@ -721,7 +732,7 @@
       const result = fantasyState.results?.[match.id] || null;
       const locked = Boolean(result) || matchStarted(match);
       const disabled = locked ? 'disabled' : '';
-      const label = result ? 'Resultado' : matchStarted(match) ? 'Encerrado' : `Jogo ${match.id}`;
+      const label = resultIsLive(result) ? 'Ao vivo' : resultIsFinal(result) ? 'Finalizado' : matchStarted(match) ? 'Jogo iniciado' : `Jogo ${match.id}`;
 
       return `<article class="fantasy-card fantasy-pick-card">
         <div class="card-meta"><span>Grupo ${match.group} - ${match.date} - ${match.time}</span><span>${label}</span></div>
