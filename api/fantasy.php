@@ -48,7 +48,7 @@ function fantasy_match_map(array $matches): array
 
 function fantasy_match_time(array $match): DateTimeImmutable
 {
-    $tz = new DateTimeZone('America/Sao_Paulo');
+    $tz = app_timezone();
     $date = DateTimeImmutable::createFromFormat('d/m/Y H:i', $match['date'] . ' ' . $match['time'], $tz);
     return $date ?: new DateTimeImmutable('2999-01-01', $tz);
 }
@@ -253,7 +253,7 @@ try {
             fantasy_json(['ok' => false, 'error' => 'Este jogo ja tem resultado oficial.'], 400);
         }
 
-        $now = new DateTimeImmutable('now', new DateTimeZone('America/Sao_Paulo'));
+        $now = app_now();
         if (fantasy_match_time($matchMap[$matchId]) <= $now) {
             fantasy_json(['ok' => false, 'error' => 'Palpites encerrados para este jogo.'], 400);
         }

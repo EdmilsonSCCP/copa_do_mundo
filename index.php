@@ -20,12 +20,12 @@ function home_h($value): string
 
 function home_match_time(array $match): DateTimeImmutable
 {
-    $tz = new DateTimeZone('America/Sao_Paulo');
+    $tz = app_timezone();
     $date = DateTimeImmutable::createFromFormat('d/m/Y H:i', $match['date'] . ' ' . $match['time'], $tz);
     return $date ?: new DateTimeImmutable('2999-01-01', $tz);
 }
 
-$now = new DateTimeImmutable('now', new DateTimeZone('America/Sao_Paulo'));
+$now = app_now();
 $nextMatches = array_values(array_filter($matches, static fn(array $match): bool => home_match_time($match) >= $now));
 usort($nextMatches, static fn(array $a, array $b): int => home_match_time($a) <=> home_match_time($b));
 $nextMatches = array_slice($nextMatches, 0, 3);

@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $stmt->execute([':email' => $email]);
         $user = $stmt->fetch();
 
-        $now = new DateTimeImmutable('now');
+        $now = app_now();
 
         if ($user) {
             if (!empty($user['locked_until']) && $now < new DateTimeImmutable($user['locked_until'])) {
@@ -70,7 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                 if ($remember) {
                     $rememberToken = bin2hex(random_bytes(32));
-                    $expiresAt = (new DateTimeImmutable('now'))
+                    $expiresAt = app_now()
                         ->modify('+' . REMEMBER_LIFETIME . ' seconds')
                         ->format('Y-m-d H:i:s');
 

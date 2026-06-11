@@ -14,6 +14,23 @@ const REMEMBER_LIFETIME = 12 * 60 * 60;
 // Seguranca
 const COOKIE_HTTPONLY = true;
 const COOKIE_SAMESITE = 'Lax';
+const APP_TIMEZONE = 'America/Sao_Paulo';
+
+date_default_timezone_set(APP_TIMEZONE);
+
+function app_timezone(): DateTimeZone
+{
+    static $timezone = null;
+    if (!$timezone) {
+        $timezone = new DateTimeZone(APP_TIMEZONE);
+    }
+    return $timezone;
+}
+
+function app_now(): DateTimeImmutable
+{
+    return new DateTimeImmutable('now', app_timezone());
+}
 
 $localConfigPath = __DIR__ . '/local_config.php';
 $localConfig = is_file($localConfigPath) ? (require $localConfigPath) : [];
@@ -90,6 +107,7 @@ try {
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
         PDO::ATTR_EMULATE_PREPARES   => false,
     ]);
+    $db->exec("SET time_zone = '-03:00'");
 } catch (Throwable $e) {
     http_response_code(500);
     exit('Erro de conexao com o banco.');
@@ -351,10 +369,10 @@ if (!current_user() && !empty($_COOKIE['remember'])) {
         $stmt->execute([':t' => $token]);
         $u = $stmt->fetch();
 
-        if ($u && !empty($u['remember_expires']) && (new DateTimeImmutable('now')) < new DateTimeImmutable($u['remember_expires'])) {
+        if ($u && !empty($u['remember_expires']) && app_now() < new DateTimeImmutable($u['remember_expires'], app_timezone())) {
             // renova cookie (rolling expiration)
             $newToken  = bin2hex(random_bytes(32));
-            $expiresAt = (new DateTimeImmutable('now'))->modify('+' . REMEMBER_LIFETIME . ' seconds')->format('Y-m-d H:i:s');
+            $expiresAt = app_now()->modify('+' . REMEMBER_LIFETIME . ' seconds')->format('Y-m-d H:i:s');
 
             $upd = $db->prepare(
                 "UPDATE usuarios

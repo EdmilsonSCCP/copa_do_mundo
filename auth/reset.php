@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
 
         if (!$u) {
             $erro = 'Token inválido ou já utilizado.';
-        } elseif (new DateTimeImmutable('now') > new DateTimeImmutable($u['reset_expires'])) {
+        } elseif (app_now() > new DateTimeImmutable($u['reset_expires'], app_timezone())) {
             $erro = 'Token expirado. Solicite novamente.';
         } else {
             $hash = password_hash($senha, PASSWORD_DEFAULT);

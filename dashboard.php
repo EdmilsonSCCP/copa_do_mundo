@@ -14,7 +14,7 @@ function dashboard_h($value): string
 
 function dashboard_match_time(array $match): DateTimeImmutable
 {
-    $tz = new DateTimeZone('America/Sao_Paulo');
+    $tz = app_timezone();
     $date = DateTimeImmutable::createFromFormat('d/m/Y H:i', $match['date'] . ' ' . $match['time'], $tz);
     return $date ?: new DateTimeImmutable('2999-01-01', $tz);
 }
@@ -92,7 +92,7 @@ try {
     $leaderboard = [];
 }
 
-$now = new DateTimeImmutable('now', new DateTimeZone('America/Sao_Paulo'));
+$now = app_now();
 $futureMatches = array_values(array_filter($matches, static fn(array $match): bool => dashboard_match_time($match) >= $now));
 usort($futureMatches, static fn(array $a, array $b): int => dashboard_match_time($a) <=> dashboard_match_time($b));
 $nextMatches = array_slice($futureMatches, 0, 4);

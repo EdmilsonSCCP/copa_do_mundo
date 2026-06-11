@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($user) {
             $resetToken = bin2hex(random_bytes(32));
-            $expires = (new DateTimeImmutable('now'))->modify('+60 minutes')->format('Y-m-d H:i:s');
+            $expires = app_now()->modify('+60 minutes')->format('Y-m-d H:i:s');
 
             $upd = $db->prepare('UPDATE usuarios SET reset_token = :token, reset_expires = :expires WHERE id = :id');
             $upd->execute([
