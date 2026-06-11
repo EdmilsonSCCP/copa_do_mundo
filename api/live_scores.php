@@ -169,14 +169,34 @@ function live_fetch_fixtures(bool $force = false): array
     return live_api_request('/fixtures?live=all', 'live', $force);
 }
 
-function live_recovery_dates(array $matches): array
+function live_final_match_ids(PDO $db): array
+{
+    $rows = $db->query('SELECT match_id, source, status FROM fantasy_results')->fetchAll(PDO::FETCH_ASSOC);
+    $final = [];
+
+    foreach ($rows as $row) {
+        $source = (string)($row['source'] ?? 'manual');
+        $status = strtoupper((string)($row['status'] ?? 'manual'));
+        if ($source === 'manual' || in_array($status, ['FT', 'AET', 'PEN'], true)) {
+            $final[(int)$row['match_id']] = true;
+        }
+    }
+
+    return $final;
+}
+
+function live_recovery_dates(array $matches, array $finalMatchIds): array
 {
     $now = app_now();
     $dates = [];
 
     foreach ($matches as $match) {
+        if (isset($finalMatchIds[(int)$match['id']])) {
+            continue;
+        }
+
         $start = live_match_time($match);
-        if ($now >= $start->modify('+95 minutes') && $now <= $start->modify('+8 hours')) {
+        if ($now >= $start->modify('+95 minutes') && $now <= $start->modify('+210 minutes')) {
             $dates[$start->format('Y-m-d')] = true;
         }
     }
@@ -184,13 +204,17 @@ function live_recovery_dates(array $matches): array
     return array_keys($dates);
 }
 
-function live_should_fetch_live(array $matches): bool
+function live_should_fetch_live(array $matches, array $finalMatchIds): bool
 {
     $now = app_now();
 
     foreach ($matches as $match) {
+        if (isset($finalMatchIds[(int)$match['id']])) {
+            continue;
+        }
+
         $start = live_match_time($match);
-        if ($now >= $start->modify('-10 minutes') && $now <= $start->modify('+160 minutes')) {
+        if ($now >= $start->modify('-10 minutes') && $now <= $start->modify('+150 minutes')) {
             return true;
         }
     }
@@ -234,12 +258,14 @@ try {
 
     $force = ($_GET['force'] ?? '') === '1';
     $matches = live_matches();
+    $finalMatchIds = live_final_match_ids($db);
     $responses = [];
-    if ($force || live_should_fetch_live($matches)) {
+
+    if (live_should_fetch_live($matches, $finalMatchIds)) {
         $responses[] = live_fetch_fixtures($force);
     }
 
-    $recoveryDates = live_recovery_dates($matches);
+    $recoveryDates = live_recovery_dates($matches, $finalMatchIds);
     foreach (live_fetch_date_fixtures($recoveryDates, $force) as $dateResponse) {
         $responses[] = $dateResponse;
     }
@@ -266,6 +292,10 @@ try {
             }
 
             foreach ($matches as $match) {
+                if (isset($finalMatchIds[(int)$match['id']])) {
+                    continue;
+                }
+
                 $pair = live_pair_matches($match, $apiHome, $apiAway);
                 if (!$pair) {
                     continue;

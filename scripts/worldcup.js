@@ -240,8 +240,11 @@
     if (!DATA?.matches?.length) return false;
     const now = Date.now();
     return DATA.matches.some((match) => {
+      const result = officialResult(match);
+      if (resultIsFinal(result)) return false;
+
       const start = matchDateTime(match).getTime();
-      return now >= start - (10 * 60 * 1000) && now <= start + (8 * 60 * 60 * 1000);
+      return now >= start - (10 * 60 * 1000) && now <= start + (210 * 60 * 1000);
     });
   }
 
