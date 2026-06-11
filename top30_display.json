@@ -4,299 +4,299 @@
         "artist": "Bruno Mars",
         "image": "https://cdn-images.dzcdn.net/images/artist/90f0b5b11df4f87ee878f38569b5995b/1000x1000-000000-80-0-0.jpg",
         "listeners": "137,098,236",
-        "lw": 1,
+        "lw": null,
         "peak": 1,
-        "weeks": 34,
-        "is_new": false
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 2,
         "artist": "Justin Bieber",
         "image": "https://cdn-images.dzcdn.net/images/artist/fe097f693cebf1f882e3da79e99e3bf9/1000x1000-000000-80-0-0.jpg",
         "listeners": "134,043,402",
-        "lw": 2,
-        "peak": 1,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 2,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 3,
         "artist": "The Weeknd",
         "image": "https://cdn-images.dzcdn.net/images/artist/581693b4724a7fcfa754455101e13a44/1000x1000-000000-80-0-0.jpg",
         "listeners": "114,065,878",
-        "lw": 3,
-        "peak": 1,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 3,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 4,
         "artist": "Michael Jackson",
         "image": "https://cdn-images.dzcdn.net/images/artist/97fae13b2b30e4aec2e8c9e0c7839d92/1000x1000-000000-80-0-0.jpg",
         "listeners": "113,091,027",
-        "lw": 4,
+        "lw": null,
         "peak": 4,
-        "weeks": 8,
-        "is_new": false
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 5,
         "artist": "Rihanna",
         "image": "https://cdn-images.dzcdn.net/images/artist/b78cdc205fae2641b89208e78b30e1b3/1000x1000-000000-80-0-0.jpg",
         "listeners": "110,889,573",
-        "lw": 5,
-        "peak": 3,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 5,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 6,
         "artist": "Lady Gaga",
         "image": "https://cdn-images.dzcdn.net/images/artist/7565262f7661b0d762621a8d69ba6f49/1000x1000-000000-80-0-0.jpg",
         "listeners": "102,657,767",
-        "lw": 6,
-        "peak": 3,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 6,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 7,
         "artist": "Taylor Swift",
         "image": "https://cdn-images.dzcdn.net/images/artist/e528e270424103b527f8a27ac625563b/1000x1000-000000-80-0-0.jpg",
         "listeners": "101,564,578",
-        "lw": 7,
-        "peak": 3,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 7,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 8,
         "artist": "Bad Bunny",
         "image": "https://cdn-images.dzcdn.net/images/artist/044a3f315b041864887a8dd8709e6926/1000x1000-000000-80-0-0.jpg",
         "listeners": "100,427,159",
-        "lw": 8,
-        "peak": 2,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 8,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 9,
         "artist": "Drake",
         "image": "https://cdn-images.dzcdn.net/images/artist/eb0ed5b21d1ea5af021fc074ded0e91f/1000x1000-000000-80-0-0.jpg",
         "listeners": "99,680,910",
-        "lw": 9,
+        "lw": null,
         "peak": 9,
-        "weeks": 34,
-        "is_new": false
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 10,
         "artist": "Coldplay",
         "image": "https://cdn-images.dzcdn.net/images/artist/3087954bca22f306324912e5ac8375c3/1000x1000-000000-80-0-0.jpg",
         "listeners": "93,682,520",
-        "lw": 10,
-        "peak": 5,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 10,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 11,
         "artist": "Shakira",
         "image": "https://cdn-images.dzcdn.net/images/artist/69c569506a8ff6ab0edfecbd1adf94b0/1000x1000-000000-80-0-0.jpg",
         "listeners": "89,769,617",
-        "lw": 11,
+        "lw": null,
         "peak": 11,
-        "weeks": 34,
-        "is_new": false
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 12,
         "artist": "David Guetta",
         "image": "https://cdn-images.dzcdn.net/images/artist/2d527fa03e106ed82a28f161694278d3/1000x1000-000000-80-0-0.jpg",
         "listeners": "89,179,437",
-        "lw": 12,
-        "peak": 10,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 12,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 13,
         "artist": "Ariana Grande",
         "image": "https://cdn-images.dzcdn.net/images/artist/3504ffe2519090026bc359b689d22e20/1000x1000-000000-80-0-0.jpg",
         "listeners": "87,640,881",
-        "lw": 13,
-        "peak": 1,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 13,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 14,
         "artist": "Katy Perry",
         "image": "https://cdn-images.dzcdn.net/images/artist/9c144bd1ed91b2a59c826cf1d1cde633/1000x1000-000000-80-0-0.jpg",
         "listeners": "87,452,448",
-        "lw": 14,
-        "peak": 13,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 14,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 15,
         "artist": "Ed Sheeran",
         "image": "https://cdn-images.dzcdn.net/images/artist/d6bb84390641d8ae9118228d9544e53d/1000x1000-000000-80-0-0.jpg",
         "listeners": "86,906,547",
-        "lw": 15,
-        "peak": 4,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 15,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 16,
         "artist": "Pitbull",
         "image": "https://cdn-images.dzcdn.net/images/artist/f755bcad19948129e670598a52d3f874/1000x1000-000000-80-0-0.jpg",
         "listeners": "85,298,119",
-        "lw": 16,
+        "lw": null,
         "peak": 16,
-        "weeks": 17,
-        "is_new": false
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 17,
         "artist": "Billie Eilish",
         "image": "https://cdn-images.dzcdn.net/images/artist/8eab1a9a644889aabaca1e193e05f984/1000x1000-000000-80-0-0.jpg",
         "listeners": "81,916,732",
-        "lw": 17,
-        "peak": 7,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 17,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 18,
         "artist": "Calvin Harris",
         "image": "https://cdn-images.dzcdn.net/images/artist/a53031d02dc2f8a8eb15d117c015d5eb/1000x1000-000000-80-0-0.jpg",
         "listeners": "80,395,506",
-        "lw": 18,
-        "peak": 15,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 18,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 19,
         "artist": "Maroon 5",
         "image": "https://cdn-images.dzcdn.net/images/artist/bbb526b9666c7e31dee295bcabbbdd8e/1000x1000-000000-80-0-0.jpg",
         "listeners": "78,393,817",
-        "lw": 19,
-        "peak": 15,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 19,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 20,
         "artist": "Eminem",
         "image": "https://cdn-images.dzcdn.net/images/artist/0f30bbd33a680030054af004d698d6ac/1000x1000-000000-80-0-0.jpg",
         "listeners": "74,134,126",
-        "lw": 20,
-        "peak": 16,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 20,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 21,
         "artist": "J Balvin",
         "image": "https://cdn-images.dzcdn.net/images/artist/325eaa46bc25052d0e3d549d60cc8225/1000x1000-000000-80-0-0.jpg",
         "listeners": "72,394,988",
-        "lw": 21,
-        "peak": 11,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 21,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 22,
         "artist": "Kanye West",
         "image": "https://cdn-images.dzcdn.net/images/artist/bb76c2ee3b068726ab4c37b0aabdb57a/1000x1000-000000-80-0-0.jpg",
         "listeners": "71,927,922",
-        "lw": 22,
-        "peak": 15,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 22,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 23,
         "artist": "Kendrick Lamar",
         "image": "https://cdn-images.dzcdn.net/images/artist/be0a7c550567f4af0ed202d7235b74d6/1000x1000-000000-80-0-0.jpg",
         "listeners": "70,186,820",
-        "lw": 23,
-        "peak": 13,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 23,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 24,
         "artist": "Sia",
         "image": "https://cdn-images.dzcdn.net/images/artist/f3d1301aeb356dc0f40440c3d4f39d0e/1000x1000-000000-80-0-0.jpg",
         "listeners": "69,416,595",
-        "lw": 24,
-        "peak": 10,
-        "weeks": 28,
-        "is_new": false
+        "lw": null,
+        "peak": 24,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 25,
         "artist": "Dua Lipa",
         "image": "https://cdn-images.dzcdn.net/images/artist/7375742a46dbebb6efc0ae362e18eb24/1000x1000-000000-80-0-0.jpg",
         "listeners": "68,341,017",
-        "lw": 25,
+        "lw": null,
         "peak": 25,
-        "weeks": 4,
-        "is_new": false
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 26,
         "artist": "SZA",
         "image": "https://cdn-images.dzcdn.net/images/artist/8ced041da2bed70d5715f0860956169b/1000x1000-000000-80-0-0.jpg",
         "listeners": "68,122,740",
-        "lw": 26,
-        "peak": 17,
-        "weeks": 34,
-        "is_new": false
+        "lw": null,
+        "peak": 26,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 27,
         "artist": "Zara Larsson",
         "image": "https://cdn-images.dzcdn.net/images/artist/26e260152661dea1897a6eea198f9981/1000x1000-000000-80-0-0.jpg",
         "listeners": "67,917,937",
-        "lw": 27,
-        "peak": 24,
-        "weeks": 12,
-        "is_new": false
+        "lw": null,
+        "peak": 27,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 28,
         "artist": "Harry Styles",
         "image": "https://cdn-images.dzcdn.net/images/artist/1151dba9b3edc0633adf35b64c21713f/1000x1000-000000-80-0-0.jpg",
         "listeners": "66,777,094",
-        "lw": 28,
-        "peak": 20,
-        "weeks": 10,
-        "is_new": false
+        "lw": null,
+        "peak": 28,
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 29,
         "artist": "Black Eyed Peas",
         "image": "https://cdn-images.dzcdn.net/images/artist/d6c2e791dfcddde652b388032e312f15/1000x1000-000000-80-0-0.jpg",
         "listeners": "66,076,369",
-        "lw": 29,
+        "lw": null,
         "peak": 29,
-        "weeks": 2,
-        "is_new": false
+        "weeks": 1,
+        "is_new": true
     },
     {
         "rank": 30,
         "artist": "Daddy Yankee",
         "image": "https://cdn-images.dzcdn.net/images/artist/a4f77d40d68cf544e74883b2bd904fce/1000x1000-000000-80-0-0.jpg",
         "listeners": "65,032,395",
-        "lw": 30,
+        "lw": null,
         "peak": 30,
-        "weeks": 2,
-        "is_new": false
+        "weeks": 1,
+        "is_new": true
     }
 ]
